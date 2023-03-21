@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://assets.crowd.aws/crowd-html-elements.js" > </script>
+<script type="text/javascript">
+
+let originalText = "";
+let highlighted_words = new Set();
+let question_number = 1;
+let userSelection = "";
+let trigger_word = "";
+let word_num = "";
+let triggerword_token_qsn = "";
+let events_words = {
+    "infect" : [],
+    "spread" : [],
+    "symptom" : [],
+    "prevent" : [],
+    "control" : [],
+    "cure" : [],
+    "death" : []
+};
+let field_names = ["${text1}", "${text2}", "${text3}", "${text4}", "${text5}"];
+let current_table = "small";
+
+// let field_names = ["This is4 *a d->umm&y sen(ten 'ce, it ! is    just. an ex:ample?", 
+//               "Remember that Stanford study claiming coronovirus infection far more prevalent than we all thought and fatality rates correspondingly lower Turns out it was funded by head of JetBlue who was fishing for arguments to get his planes flying again (url)",
+//               "So people claiming Ali sbka hai and more curious about corona than Youm e Ali as itself Its not a surprise that they dont share anything related to event/date but triggered and are sharing about corono Yome Ali ki waja se spread hoga type thingsn (url)",
+//               "People who talk loudly can release 10 times more coronavirusinfected particles into the air then those who speak more softly an NIH study finds Wearing a mask reduces the spread of COVID19 whether you use your inside or outside voice (url)",
+//               "Stay home abstinenceWear a mask condomGo out and live like normal raw dog it and pray you can afford the chances youre taking"];
+ 
+
+window.onload = function() {
+  
+  for (let i = 1; i <= field_names.length; i++) {
+        let ele = document.createElement("H2");
+        ele.textContent = field_names[i-1];
+        ele.setAttribute('id', 'question'+String(i));
+        document.querySelector("#questions").appendChild(ele);
+}
+  
+  document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+  originalText = document.getElementById("text_question").innerHTML;
+
+  replace();
+  document.getElementById("previous_btn").disabled = true;
+  document.getElementById("qsn_num").innerHTML = question_number + '/' + field_names.length;
+  document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
+  
+  document.getElementById("infect_trigger_words").value = "default,";
+  document.getElementById("spread_trigger_words").value = "default,";
+  document.getElementById("symptom_trigger_words").value = "default,";
+  document.getElementById("prevent_trigger_words").value = "default,";
+  document.getElementById("control_trigger_words").value = "default,";
+  document.getElementById("cure_trigger_words").value = "default,";
+  document.getElementById("death_trigger_words").value = "default,";
+}
+
+function isAlphanumeric(str) {
+  return str.match(/^[a-zA-Z0-9]+$/) !== null;
+}
+
+
+function replace()
+{
+
+    let currText = field_names[question_number-1];
+    let v=[];
+    let i=0;
+    let curr_word = "";
+    while(i<=currText.length)
+    {
+        if(i==currText.length)
+        {
+            if(curr_word.length > 0)
+                v.push(curr_word);
+            break;
+        }
+        if(isAlphanumeric(String(currText[i])))
+        {
+            if(curr_word.length > 0 && !isAlphanumeric(curr_word))
+            {
+                v.push(curr_word);
+                curr_word = "";
+            }
+            curr_word = curr_word + currText[i];
+        }
+        else if(currText[i] == ' ')
+        {
+            if(curr_word.length > 0)
+            {   
+                 v.push(curr_word);
+            }
+                curr_word = "";
+        }
+        else {
+            if(curr_word.length > 0 && isAlphanumeric(curr_word))
+            {   
+                 v.push(curr_word);
+                 curr_word = "";
+            }
+            curr_word = curr_word + currText[i];
+        }
+        i++;
+    }
+    
+    let result = "";
+    i=0;
+    let count = 0;
+    let w = v;
+
+    while(i<w.length)
+    {
+        if(w[i].length>0)
+        {
+            // if(/\S/.test(w[i]))
+            // {
+            superscript = "_" + String(count);
+            if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number))) 
+            {  
+                result = result + '<span style="background-color:#7FFF00">' + w[i] + superscript.sup() + '</span> ';
+            }
+            else
+            {    
+                result = result + w[i] + superscript.sup() + ' ';
+            }
+            
+            count++;
+            
+            // }
+            // else
+            // {
+            //     result = result + w[i];
+            // }
+        }
+        i++;
+    }
+
+document.getElementById("text_question").innerHTML = result;
+
+}
+
+function previous()
+{
+    hideMenu();
+    question_number = question_number - 1;
+    document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+    replace();
+    populateSelectedItems();
+    document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
+    if(String(1) == String(question_number))
+    {  
+        document.getElementById("previous_btn").disabled = true;
+    }
+    if(String(field_names.length) != String(question_number))
+    {
+        document.getElementById("next_btn").disabled = false;
+    }
+    document.getElementById("qsn_num").innerHTML = question_number + '/' + field_names.length;
+}
+
+function next()
+{
+    hideMenu();
+    question_number = question_number + 1;
+    document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+    replace();
+    populateSelectedItems();
+    document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
+    if(String(field_names.length) == String(question_number))
+    {  
+        document.getElementById("next_btn").disabled = true;
+    }
+    if(String(1) != String(question_number))
+    {
+        document.getElementById("previous_btn").disabled = false;
+    }
+    document.getElementById("qsn_num").innerHTML = question_number + '/' + field_names.length;
+}
+
+function hideMenu() {
+        document.getElementById("contextMenu").style.display = "none"
+}
+
+function list_to_string(li)
+{
+    var s = "default,";
+    for(let elem in li)
+    {
+        s += li[elem] + ",";
+    }
+    return s.substring(0, s.length-1);
+}
+
+  
+function doubleClick(e) {
+    
+    e.preventDefault();
+    userSelection = window.getSelection().getRangeAt(0);
+    let _index = String(userSelection).lastIndexOf("_");
+    if(_index>0)
+    {
+        trigger_word = String(userSelection).substring(0, _index);
+        
+        if(!isAlphanumeric(trigger_word))
+        {
+            alert("you did not click on a valid word");
+            return;
+        }
+        
+        word_num = String(userSelection).substring(_index+1);
+        triggerword_token_qsn = String(userSelection) + '_' + String(question_number);
+    }
+    else
+    {
+        alert("you did not click on a valid word");
+        return;
+    }
+           
+    document.getElementById("infect").checked = false;
+    document.getElementById("spread").checked = false;
+    document.getElementById("symptom").checked = false;
+    document.getElementById("prevent").checked = false;
+    document.getElementById("control").checked = false;
+    document.getElementById("cure").checked = false;
+    document.getElementById("death").checked = false;
+    
+    document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '"';
+ 
+    var menu = document.getElementById("contextMenu")
+    menu.style.display = 'block';
+
+}
+
+function delete_tw(id)
+{
+    
+    let _index = id.indexOf('_');
+    let extracted_tiggerword_token_qsn = id.substring(_index+1);
+    let elem = document.getElementById("p_" + extracted_tiggerword_token_qsn);
+    elem.remove();
+    
+    highlighted_words.delete(extracted_tiggerword_token_qsn);
+    replace();
+    
+    let index = events_words["infect"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["infect"].splice(index, 1); 
+        s = list_to_string(events_words['infect']);
+        document.getElementById("infect_trigger_words").value = s;
+    }
+    index = events_words["spread"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["spread"].splice(index, 1); 
+        s = list_to_string(events_words['spread']);
+        document.getElementById("spread_trigger_words").value = s;
+    }
+    index = events_words["symptom"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["symptom"].splice(index, 1); 
+        s = list_to_string(events_words['symptom']);
+        document.getElementById("symptom_trigger_words").value = s;
+    }
+    index = events_words["prevent"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["prevent"].splice(index, 1); 
+        s = list_to_string(events_words['prevent']);
+        document.getElementById("prevent_trigger_words").value = s;
+    }
+    index = events_words["control"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["control"].splice(index, 1); 
+        s = list_to_string(events_words['control']);
+        document.getElementById("control_trigger_words").value = s;
+    }
+    index = events_words["cure"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["cure"].splice(index, 1); 
+        s = list_to_string(events_words['cure']);
+        document.getElementById("cure_trigger_words").value = s;
+    }
+    index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["death"].splice(index, 1); 
+        s = list_to_string(events_words['death']);
+        document.getElementById("death_trigger_words").value = s;
+    }
+    
+    hideMenu();
+}
+
+function edit_events(id)
+{
+    let _index = id.indexOf('_');
+    let extracted_tiggerword_token_qsn = id.substring(_index+1);
+    trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
+    document.getElementById("trigger_word_content").innerHTML = 'Editing the events that are triggered by "' + trigger_word + '"';
+ 
+    var menu = document.getElementById("contextMenu")
+    menu.style.display = 'block';
+    
+    let index = events_words["infect"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("infect").checked = (index > -1);
+    index = events_words["spread"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("spread").checked = (index > -1);
+    index = events_words["symptom"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("symptom").checked = (index > -1);
+    index = events_words["prevent"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("prevent").checked = (index > -1);
+    index = events_words["control"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("control").checked = (index > -1);
+    index = events_words["cure"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("cure").checked = (index > -1);
+    index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("death").checked = (index > -1);
+    
+    triggerword_token_qsn = extracted_tiggerword_token_qsn;
+    
+}
+
+
+function highlightRange() {
+
+    highlighted_words.add(triggerword_token_qsn);
+    replace();
+
+}
+
+
+function events_selected()
+{
+    
+    events = "";
+    let index = 0;
+    
+    var infect_checkBox = document.getElementById("infect");
+    index = events_words["infect"].indexOf(triggerword_token_qsn);
+    if (infect_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "infect";
+        if(index==-1)
+        {
+            events_words["infect"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['infect']);
+            document.getElementById("infect_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+    {
+            events_words["infect"].splice(index, 1); 
+            s = list_to_string(events_words['infect']);
+            document.getElementById("infect_trigger_words").value = s;
+    }
+    
+    var spread_checkBox = document.getElementById("spread");
+    index = events_words["spread"].indexOf(triggerword_token_qsn);
+    if (spread_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "spread";
+        if(index==-1)
+        {
+            events_words["spread"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['spread']);
+            document.getElementById("spread_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["spread"].splice(index, 1); 
+            s = list_to_string(events_words['spread']);
+            document.getElementById("spread_trigger_words").value = s;
+        }
+    
+    var symptom_checkBox = document.getElementById("symptom");
+    index = events_words["symptom"].indexOf(triggerword_token_qsn);
+    if (symptom_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "symptom";
+        if(index==-1)
+        {
+            events_words["symptom"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['symptom']);
+            document.getElementById("symptom_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["symptom"].splice(index, 1); 
+            s = list_to_string(events_words['symptom']);
+            document.getElementById("symptom_trigger_words").value = s;
+        }
+    
+    var prevent_checkBox = document.getElementById("prevent");
+    index = events_words["prevent"].indexOf(triggerword_token_qsn);
+    if (prevent_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "prevent";
+        if(index==-1)
+        {
+            events_words["prevent"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['prevent']);
+            document.getElementById("prevent_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["prevent"].splice(index, 1); 
+            s = list_to_string(events_words['prevent']);
+            document.getElementById("prevent_trigger_words").value = s;
+        }
+    
+    var control_checkBox = document.getElementById("control");
+    index = events_words["control"].indexOf(triggerword_token_qsn);
+    if (control_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "control";
+        if(index==-1)
+        {
+            events_words["control"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['control']);
+            document.getElementById("control_trigger_words").value = s;
+        }
+        
+    }
+    else if (index > -1) 
+        {    
+            events_words["control"].splice(index, 1); 
+            s = list_to_string(events_words['control']);
+            document.getElementById("control_trigger_words").value = s;
+        }
+    
+    
+    
+    var cure_checkBox = document.getElementById("cure");
+    index = events_words["cure"].indexOf(triggerword_token_qsn);
+    if (cure_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "cure";
+        if(index==-1)
+        {
+            events_words["cure"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['cure']);
+            document.getElementById("cure_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["cure"].splice(index, 1); 
+            s = list_to_string(events_words['cure']);
+            document.getElementById("cure_trigger_words").value = s;
+        }
+    
+    var death_checkBox = document.getElementById("death");
+    index = events_words["death"].indexOf(triggerword_token_qsn);
+    if (death_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "death";
+        if(index==-1)
+        {
+            events_words["death"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['death']);
+            document.getElementById("death_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["death"].splice(index, 1); 
+            s = list_to_string(events_words['death']);
+            document.getElementById("death_trigger_words").value = s;
+        }
+  
+  hideMenu();
+  elem = document.getElementById("p_" + triggerword_token_qsn);
+  if(events === "")
+  {
+      elem.remove();
+      highlighted_words.delete(triggerword_token_qsn);
+      replace();
+      return;
+  }
+  
+  highlightRange();
+
+    if(elem)
+    {
+        elem.innerHTML =  ' <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button>';
+    }
+    else
+    {
+        document.getElementById("trigger_words").innerHTML +=
+        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ triggerword_token_qsn + '"> <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
+    } 
+  
+
+    
+}
+
+function getInfo(word_token_num, ch)
+{
+    let _index = word_token_num.lastIndexOf("_");
+    let qsn = word_token_num.substring(_index+1);
+    let _left = word_token_num.substring(0, _index);
+    let __index = _left.lastIndexOf("_");
+    let token = _left.substring(__index+1);
+    let word = _left.substring(0, __index);
+    
+    if(ch == 'w')
+    {
+        return word;
+    }
+    else if(ch == 't')
+    {
+        return token;
+    }
+    else if(ch == 'q')
+    {
+        return qsn;
+    }
+}
+
+function populateSelectedItems()
+{
+    document.getElementById("trigger_words").innerHTML = "";
+    for(let item of highlighted_words.values())
+    {
+        let qsn = getInfo(item, 'q');
+        if(String(qsn) == String(question_number))
+        {
+            
+            let word = getInfo(item, 'w');
+            let events = "";
+            
+            let index = events_words["infect"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "infect";
+            }
+            index = events_words["spread"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "spread";
+            }
+            index = events_words["symptom"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "symptom";
+            }
+            index = events_words["prevent"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "prevent";
+            }
+            index = events_words["control"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "control";
+            }
+            index = events_words["cure"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "cure";
+            }           
+            index = events_words["death"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "death";
+            }            
+            
+            document.getElementById("trigger_words").innerHTML +=
+        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ item + '"> <span id="selection_' + item + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + item + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + item + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
+ 
+        }
+        
+    }
+}
+
+
+function toggle_table()
+{
+    if(current_table == "small")
+    {
+        document.getElementById("small_table").style.display = "none";
+        document.getElementById("big_table").style.display = "block";
+        document.getElementById("table_toggler").innerHTML = "<u> Click here to view a simpler table </u> ";
+        current_table = "big";
+    }
+    else
+    {
+        document.getElementById("big_table").style.display = "none";
+        document.getElementById("small_table").style.display = "block";
+        document.getElementById("table_toggler").innerHTML = "<u> Click here to view an exhaustive table </u>";
+        current_table = "small";
+    }
+    
+}
+
+</script>
+<style>
+
+  sup {
+  vertical-align: super;
+  font-size: 5.0pt;
+}
+  #infect_event {display: inline-block;}
+  #spread_event {display: inline-block;}
+  #symptom_event {display: inline-block;}
+  #prevent_event {display: inline-block;}
+  #control_event {display: inline-block;}
+  #treatment_event {display: inline-block;}
+  #cure_event {display: inline-block;}
+  #death_event {display: inline-block;}
+  /*#annotate {float: left; width=50%}*/
+  /*#sample_table { float: right; width=50%}*/
+  
+         .highlight_word
+        {
+            background-color: #00FF00;
+        }
+        
+        .un-highlight_word
+        {
+            background-color: #ffffdd;
+        }
+  
+  table {float:right;
+      font-size: 100%;
+      height: 30%;
+      /*width: 90%;*/
+  }
+  table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  
+  
+  
+          .context-menu {
+            position: absolute;
+            text-align: center;
+            background: lightgray;
+            border: 1px solid black;
+        }
+  
+        .context-menu ul {
+            padding: 0px;
+            margin: 0px;
+            min-width: 150px;
+            list-style: none;
+        }
+  
+        .context-menu ul li {
+            padding-bottom: 7px;
+            padding-top: 7px;
+            border: 1px solid black;
+        }
+  
+        .context-menu ul li a {
+            text-decoration: none;
+            color: black;
+        }
+  
+        .context-menu ul li:hover {
+            background: darkgray;
+        }
+}
+
+
+</style>
+</head>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<body>
+<crowd-form answer-format="flatten-objects">
+ <div class="pager" style="margin-left:30%;">
+ <button type="button" style="color:#FFFFFF;background-color:#4CAF50;" id="previous_btn" onclick="previous()">&laquo; Previous</button>
+ <span id="qsn_num"> </span>
+ <button type="button" style="color:#FFFFFF;background-color:#4CAF50;" id="next_btn" onclick="next()">Next &raquo;</button>
+ <span style="color:#3ca2c3;margin-left:45%;" id="table_toggler" onclick="toggle_table()"> <u> Click here to view an exhaustive table</u> </span>
+ </div>
+ 
+  <crowd-instructions link-text="View instructions" link-type="button">
+    <short-summary>
+      <p>An Event is defined as something happens in a sentence. In this task, we are trying to identity whether one or more of the following events exist in a given string: <i>infect, spread,symptom,prevent,control, cure, and death</i>. And if an event exist, what is the major <b>triggering word</b> that mostly manifest its occurrence. 
+        <br><br>
+       <table id="events_table" style="margin-right : 20px; margin-left : 150px; float:none;">
+ <tr>
+    <td  width="2%"><b>Event</b></td>
+    <td  width="8%"><b>Definition</b></td>
+  </tr>
+  <tr >
+    <td>infect</td>
+    <td> The process of a disease/pathogen invading host(s).	</td>
+  </tr>
+ <tr >
+    <td>spread</td>
+    <td> The process of a disease spreading/pervailing massively at a large scale. </td>
+ </tr>
+ <tr >
+    <td>symptom</td>
+    <td> Individuals displaying physiological features indicating the abnormality of organisms. 	</td>
+ </tr>
+  <tr >
+    <td>prevent</td>
+    <td> Individuals trying to prevent the infection of a disease.	</td>
+ </tr>
+  <tr >
+    <td>control</td>
+    <td> Collective efforts trying to impede the spread of a pandemic.	</td>
+ </tr>
+  <tr >
+    <td>cure</td>
+    <td> Stopping infection and relieving individuals from infections/symptoms.	</td>
+ </tr>
+  <tr >
+    <td>death</td>
+    <td> End of life of individuals due to infectious disease.	</td>
+ </tr>
+  </table>
+      
+      </p>
+      
+        <p> In order to annotate, first double click on a word that you think is a potential trigger word for any of the 7 events. Then you would have to choose which event is being triggered by that word. You also have the option to delete an already chosen trigger word or edit the events triggered by it
+      </p>
+        <p> <ul>Important Notes:  
+            <li> There can be sentences without any events. No need to annotate anything for such sentences. </li>
+            <li>  A trigger word can be linked to one or more events. Choose all possible events in such cases. </li>
+            <li> Multiple events can be present in a given sentence. Mark all such events.  </li>
+            <li> The same event can occur multiple times (at different parts) in the same sentence. Mark all occurrences of the event.  </li>
+            <li> You will be able to submit the HIT at the last sentence once you finish annotating all the sentences. </li>
+            </ul></p>
+      
+    </short-summary>
+
+    <detailed-instructions>
+      
+      <p>
+         Here are more detailed instructions for how to choose the most appropriate triggering word: <br> <br>
+Goal: Look for the one word that MOST LIKELY manifests the event's occurrence. You can use the following priority order for annotation:
+<ol>
+    <li> Most of the times, the trigger of the event will be the the <span style="color:blue"> <b>main verb </b></span> in the sentence. </li>
+    <li> If the verb is ambiguous/vague, the trigger would be a <span style="color:blue"> <b> noun </b></span> semantically related to event. </li>
+    <li> (Rare case) If no such noun exists, the trigger would be any <span style="color:blue"> <b> adjective/adverb </b></span> that is related to the event. </li>
+    <li> If still confused, use your best judgement to select the trigger. </li>
+</ol>
+</p>
+
+<p>
+<span style="color:blue"> <b>CASE I : main verb</b></span> <br>
+Example Sentence: "I was coughing and got a fever yesterday and today just confirmed I got COVID"<br>
+Annotation: There are 2 events of <i>symptom</i> and 1 event of <i>infect</i> in this example as follows (trigger words marked in blue): <br>
+<ol type="a">
+<li>...<span style="color:blue"><b>got</b></span> a fever... ->Event <i>symptom</i></li>
+<li>...was <span style="color:blue"><b>coughing</b></span>... ->Event <i>symptom</i></li> 
+<li>...<span style="color:blue"><b>got</b></span> COVID... ->Event <i>infect</i></li><br>
+Note 1: “fever" and "COVID" are NOT marked as triggering word of the events since the main verbs indicate the event.<br>
+Note 2: Here, due to the presence of “and”, we have two occurrences of the event <i>symptom</i>.<br>
+</ol>
+
+Some more examples of main verb as triggering word:
+
+<table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
+ <tr>
+    <td  width="2%"><b>Example</b></td>
+    <td  width="1%"><b>Event</b></td>
+  </tr>
+  <tr >
+    <td><span style="color:blue"><b>fight</b></span> against the pandemic</td>
+    <td> control	</td>
+  </tr>
+  <tr >
+    <td><span style="color:blue"><b>caught</b></span> a flu</td>
+    <td> infect	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>recover</b></span> from COVID</td>
+    <td> cure	</td>
+  </tr>
+    <tr >
+    <td>COVID <span style="color:blue"><b>takes</b></span> lives</td>
+    <td> death	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>prevent</b></span> infection</td>
+    <td> prevent	</td>
+  </tr>
+    <tr >
+    <td>stomach <span style="color:blue"><b>hurts</b></span></td>
+    <td> symptom	</td>
+  </tr>
+    <tr >
+    <td>number of infection <span style="color:blue"><b>increases</b></span></td>
+    <td> spread	</td>
+  </tr>
+
+  </table>
+  <br> <br>
+</p>
+
+<p>
+<span style="color:blue"> <b>CASE II : noun</b></span> <br>
+ Example Sentence: "Fever, cough, and headache are the most common symptoms of COVID"<br>
+ Annotation: Here we have 1 event of <i>symptom</i> event:
+ 
+ <ol type="a">
+<li> ...common <span style="color:blue"><b>symptoms...</b></span> ->Event <i>symptom</i></li> <br>
+Note: "fever", "cough", and "headache" manifest the <i>symptom</i> event but they are NOT triggering words because <span style="color:blue"><b>"symptoms"</b></span> better manifests the Event.<br>
+</ol>
+
+Some more examples of noun as triggering word: 
+ 
+<table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
+ <tr>
+    <td  width="2%"><b>Example</b></td>
+    <td  width="1%"><b>Event</b></td>
+  </tr>
+  <tr >
+    <td><span style="color:blue"><b>death</b></span> rate</td>
+    <td> death	</td>
+  </tr>
+  <tr >
+    <td><span style="color:blue"><b>therapy</b></span> for COVID</td>
+    <td> cure	</td>
+  </tr>
+    <tr >
+    <td>infection <span style="color:blue"><b>prevention</b></span></td>
+    <td> prevent	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>control</b></span> of spread</td>
+    <td> control	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>signs</b></span> of infection</td>
+    <td> symptom	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>Spreading</b></span> of COVID</td>
+    <td> spread	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>infection</b></span> rate</td>
+    <td> infect	</td>
+  </tr>
+
+  </table>
+
+</p>
+
+<p>
+<span style="color:blue"> <b>CASE III :  adjective</b></span> <br>
+Example Sentence: "I am feverish since 2 days ago"<br>
+Annotation: Here we have 1 event of the <i>symptom</i> event:
+
+<ol type="a">
+<li> ...am <span style="color:blue"><b>feverish...</b></span> ->Event <i>symptom</i></li> <br>
+Note: Here, we do not have a strong verb/noun for marking the trigger. Thus we mark "feverish"<br>
+</ol>
+
+Some more rare case examples of triggering word:
+
+<table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
+ <tr>
+    <td  width="2%"><b>Example</b></td>
+    <td  width="1%"><b>Event</b></td>
+  </tr>
+  <tr >
+    <td>get <span style="color:blue"><b>rid</b></span> of disease</td>
+    <td> cure	</td>
+  </tr>
+  <tr >
+    <td>stay<span style="color:blue"><b>cautious</b></span> against virus</td>
+    <td> prevent	</td>
+  </tr>
+    <tr >
+    <td><span style="color:blue"><b>contagious</b></span> virus</td>
+    <td> infect	</td>
+  </tr>
+  </table>
+
+</p>
+
+      
+    </detailed-instructions>
+    <positive-example>
+      <p>Example 1: "Three tips of preventing being infected by COVID: cover you mouth when coughing, wear a mask, and get a vaccination as required."
+      <p>Annotation: <br>
+      <ol type="a">
+          <li> <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i></li>
+          <li> <span style="color:blue"> <b>spreading</b></span> -> Event <i>spread</i> </li>
+      </ol>
+      <ol>
+          Note 1: Although semantically "prevent being infected" means not infected, the Event <i>infect</i> still exist because <br> <br>
+          Note 2: "cover mouth", "wear mask", and "get vaccination" are actions to prevent infection, but not triggers for Event <i>prevent</i> because we mark the most likely word 
+        
+      </ol>
+       <span style="color:red">  Event is about what occurs in sentence rather than in reality. </span>
+      </p>
+    </positive-example>
+    
+    <positive-example>
+      <p>Example 2 : "2000+ travelers from China are infected, and the disease is already spreading among the flight crews."
+      <p>Annotation: <br>
+      <ol type="a">
+          <li> <span style="color:blue"> <b>preventing</b></span> -> Event <i>prevent</i> </li>
+          <li> <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i></li>
+      </ol>
+      <ol>   
+          Note: Event <i>symptom</i> DO NOT exist here because no triggering word mentioned in sentence. <br>
+         
+      </ol>
+      <span style="color:red">  Event must be determined via triggering word and CANNOT be inferred from another Event. </span>
+    </p>
+    </positive-example>
+    
+    
+    <negative-example> <p>Example 1: : "The government has imposed mask requirement and social distance, so every one please remember to wear a mask and follow the rules."</p>
+      <p>WRONG Annotation: <br>
+      <ol type="a">
+          <li> <span style="color:blue"> <b>imposed</b></span> -> Event <i>control</i> </li>
+      </ol>
+      
+      Correct Annotation: <br>
+      <ol type="a">
+          <li> No events present in sentence </li>
+       </ol>
+       <ol>
+          Note 1: "mask requirement" and "social distance" are policies to control the COVID pandemic. But there is no mention of COVID/virus/disease in the sentence, it’s unclear if these measures help to control the pandemic. Thus, no <i>control</i> event. <br> <br>
+          Note 2: ”wear a mask" and "follow the rules" are actions to prevent COVID infection, but again since nothing is explicitly specified, no <i>prevent</i> event is annotated.
+      </ol>
+      
+      <span style="color:red">  Look for Events themselves instead of actions/policies related to Events. </span>
+      </p>
+    </negative-example>
+    
+        <negative-example> <p>Example 2 : "Two weeks of quarantine is killing me! May God cure my mind and stop my crazy thoughts."</p>
+            <p>WRONG Annotation: <br>
+      <ol type="a">
+          <li> <span style="color:blue"> <b>killing</b></span> -> Event <i>death</i> </li>
+      </ol>
+      
+      Correct Annotation: <br>
+      <ol type="a">
+          <li> No events present in sentence </li>
+       </ol>
+       
+        <ol>
+          Note 1: “killing” is not indicating real end of somebody's life, so Event death does NOT exist here. <br> <br>
+          Note 2: "cure" doesn’t indicate the cure against the disease. Thus, it is not a triggering word of Event <i>cure</i>.
+      </ol>
+       
+<span style="color:red"> DO NOT identify hyperbole or other rhetorical device as Events. </span> <br>
+<span style="color:red"> Synonyms of Event names are likely to be triggering words but NOT GUARANTEED!! Must double check Event definition! </span>
+      </p>
+    </negative-example>
+    
+  </crowd-instructions>
+<div style = "display:flex;">
+<div id="annotate">
+    
+    <div>
+    <p style="padding-left:10px;color:red;width:350px;"><b>Please read the instructions before attempting the task</b></p>
+  </div>
+  <div id="questions" style="display:none;">
+  </div>
+     <!--<p id="questions">-->
+     <p style="width:350px; font-size:100%; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>
+     <!--<p style="width:350px; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>-->
+    <!--</p>-->
+  <div>
+      <crowd-input style="display:none;" type="text" id="infect_trigger_words" name="infect_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="spread_trigger_words" name="spread_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="symptom_trigger_words" name="symptom_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="prevent_trigger_words" name="prevent_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="control_trigger_words" name="control_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="cure_trigger_words" name="cure_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="death_trigger_words" name="death_trigger_words"></crowd-input>
+  </div>
+        <div id="contextMenu" class="context-menu" 
+        style="display:none; border:1px solid black; width: 400px ;padding: 10px; margin: 10px;">
+        <p id="trigger_word_content"></p> 
+         <div id="infect_event"> <crowd-checkbox type="checkbox" id="infect" name="name" value="infect"  > </crowd-checkbox> <label for="infect"> infect </label> </div>
+         <br>
+         <div id="spread_event"> <crowd-checkbox type="checkbox" id="spread" name="name" value="spread" ></crowd-checkbox><label for="spread"> spread </label> </div>
+         <br>
+         <div id="symptom_event"> <crowd-checkbox type="checkbox" id="symptom" name="name" value="symptom" > </crowd-checkbox>  <label for="symptom"> symptom </label> </div>
+         <br>
+         <div id="prevent_event"> <crowd-checkbox type="checkbox" id="prevent" name="name" value="prevent" > </crowd-checkbox> <label for="prevent"> prevent </label> </div>
+         <br>
+         <div id="control_event"> <crowd-checkbox type="checkbox" id="control" name="name" value="control" > </crowd-checkbox>  <label for="control"> control </label> </div>
+         <br>
+         <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
+         <br>
+         <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" > </crowd-checkbox> <label for="death"> death </label> </div>
+         <br>
+         
+         <br>
+        <button type="button" onclick="events_selected()">Submit</button>
+         
+         <br>
+
+    </div>
+  
+
+  <div>
+    <p style="padding-left:10px;color:#e31818;width:350px;">Double click and select the event trigger words present in the above text” to “In order to annotate, first double click on a word that you think is a potential trigger word for any of the 7 events. Then you would have to choose which event is being triggered by that word</p>
+    
+    <p style="padding-left:10px;color:#2c18e3;width:350px;">Trigger words and Events:</p>
+    
+    <div id="trigger_words">
+       
+    </div>
+  
+ <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled>Submit HIT</button> 
+
+
+  </div>
+ </div>
+ 
+ 
+ <table id="small_table" style="margin-right : 20px; margin-left : 150px;">
+ <tr>
+    <td  width="2%"><b>Event</b></td>
+    <td  width="12%"><b>Definition</b></td>
+    <td  width="10%"><b>Examples</b></td>
+  </tr>
+  <tr >
+    <td>infect</td>
+    <td> <span style="color:blue"> disease invading host(s). </span> <br>
+        **emphasize infection"	</td>
+    <td>
+        "I <b>have</b> COVID." <br>
+        "High <b>infection</b> rate in U.S. ..."	
+    </td>
+  </tr>
+ <tr >
+    <td>spread</td>
+    <td> <span style="color:blue"> disease spreading at a large scale. </span> <br>
+        **emphasize dispersion<br> </td>
+    <td>
+        "Control the <b>spread</b> of covid." <br>
+        "Infected cases <b>increases</b> ..."
+    </td>
+ </tr>
+ <tr >
+    <td>symptom</td>
+    <td> <span style="color:blue"> Individuals displaying abnormal physiological features. </span> 	</td>
+    <td>"<b>Symptoms</b> of disease..." <br>
+        "I <b>have</b> a sore throat."</td>
+ </tr>
+  <tr >
+    <td>prevent</td>
+    <td> <span style="color:blue"> attempting to avoid infection of a disease. </span> <br>
+                                    **can be done by individual effort"	
+    </td>
+    <td>"...<b>prevent</b> disease infection." <br>
+        "...<b>protect</b> family from COVID."	</td>
+ </tr>
+  <tr >
+    <td>control</td>
+    <td> <span style="color:blue"> attemping to control spread of a pandemic. </span> <br>
+                                   **can NOT be done by individual effort"		
+    </td>
+    <td>	"...<b>protect</b> nation from COVID." <br>
+            "...<b>control</b> the spread of flu."	</td>
+ </tr>
+  <tr >
+    <td>cure</td>
+    <td> <span style="color:blue">relieving individuals from infections and symptoms.	</span>		</td>
+    <td>"This drug can <b> treat </b> smallpox." <br>
+        "I <b> recovered </b> from my illness."</td>
+ </tr>
+  <tr >
+    <td>death</td>
+    <td> <span style="color:blue"> End of life of individuals due to infectious disease.	</span>	</td>
+    <td>"Stats about Covid <b>death</b> toll..." <br>
+        "The virus <b>kills</b> 50 people..."	</td>
+ </tr>
+  </table>
+
+  
+  
+  <table id="big_table" style="margin-right:20px;margin-left:150px;display:none">
+  <tr>
+    <td  width="2%"><b>Event</b></td>
+    <td  width="12%"><b>Definition and examples</b></td>
+    <td  width="22%"><b>Difference between Events</b></td>
+  </tr>
+  <tr >
+    <td>infect</td>
+    <td><span style="color:blue"> The process of a disease/pathogen invading host(s). </span> <br>
+eg. "I <b>caught</b> a cold." <br> "Disease is <b>infectious</b>." <br>
+      "New COVID <b>cases</b>."</td>
+    </td>
+    <td  rowspan="2">-- Event <i>infect</i> focus on disease's action of invading host(s).<br>
+-- Event <i>spread</i> focus on disease's action of dispersing.<br>
+-- Use the focus of triggering word to determine which Event dominates.<br>
+(eg. COVID infected 1.5 million people in L.A.) Though 1.5 million people infected means COVID is spreading, we mark Event infect because triggering word <b>infected</b> emphasize infection not dispersion.<br>
+</td>
+  </tr>
+ <tr >
+    <td>spread</td>
+    <td><span style="color:blue">The process of a disease spreading/pervailing massively at a large scale.</span> <br>
+eg."Disease <b>sweeps</b> across L.A."  "SARS was prevalent in Asia."<br>
+     "To stop the <b>transmission</b> of infection..." </td>
+ </tr>
+ <tr >
+    <td>symptom</td>
+    <td><span style="color:blue">Individuals displaying physiological features indicating the abnormality of organisms.</span> <br>
+eg."I <b>got</b> a fever."  <br>   "I feel <b>sick</b>."  <br>  "He <b>vomits</b> and <b>cough</b>."</td>
+    <td>-- Event <i>symptoms</i> potentially but not necessarily implies infection of some disease.<br>
+-- Event <i>infect</i> indicates confirmed infection of some disease.</td>
+ </tr>
+  <tr >
+    <td>prevent</td>
+    <td> <span style="color:blue"> Individuals trying to prevent the infection of a disease.</span> <br>
+eg. "tips to <b>avoid</b> catching a cold."  <br>       "<b>Prevention</b> of infection" <br>
+      "remember COVID <b>protective</b> rules."	</td>
+    <td rowspan="2">-- Event <i>prevent</i> focus on preventing disease infection. <br>
+-- Event <i>control</i> focus on controling disease dispersion. <br>
+-- Usually Event <i>prevent</i> can be achieved by individual effort, such as "<b>avoid</b> infection", while Event <i>control</i> can NOT be achieved by individual effort, such as "<b>control</b> the spread of COVID."</td>
+ </tr>
+  <tr >
+    <td>control</td>
+    <td>  <span style="color:blue"> Collective efforts trying to impede the spread of a pandemic.</span> <br>
+eg. "the pandemic can be <b>stopped</b>."   <br>        "<b>Fight</b> against COVID." <br>
+       "Government failed to <b>slow</b> down the spread of COVID." 		</td>
+ </tr>
+  <tr >
+    <td>cure</td>
+    <td> <span style="color:blue"> Stopping infection and relieving individuals from infections/symptoms. </span> <br>
+eg. "no effective <b>treatment</b> for Covid."   <br>        "Get <b>rid</b> of a disease."  <br>
+       "Can it <b>cure</b> the disease?"		</td>
+    <!--<td>"Three steps to get <b>rid</b> of the flu: drink water, keep warm, and rest well."<br>"There is no effective <b>treatment</b> for COVID so far."<br>"Even patients already <b>recovered</b> from COVID remain coughing for a while."</td>-->
+    <td></td>
+ </tr>
+  <tr >
+    <td>death</td>
+    <td> <span style="color:blue"> End of life of individuals due to infectious disease. </span> <br>
+eg. "<b>fatality</b> rate is high." <br>                 "<b>Loss</b> of life during pandemic." <br>
+      "Thousands of people <b>died</b> of SARS 20 years ago."	</td>
+
+    <td>-- Hyperbole and rhetorical expression (eg. I'd rather die than quarantine for a month) does not count as Event <i>death</i>.</td>
+ </tr>
+ 
+</table>
+
+
+</div>
+</crowd-form>
+</body>
+</html>
