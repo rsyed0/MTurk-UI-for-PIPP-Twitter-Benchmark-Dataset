@@ -23,6 +23,7 @@ let events_words = {
     "death" : []
 };
 let field_names = ["${text1}", "${text2}", "${text3}", "${text4}", "${text5}"];
+let ids = ["${id1}", "${id2}", "${id3}", "${id4}", "${id5}"];
 let current_table = "small";
 
 // let field_names = ["This is4 *a d->umm&y sen(ten 'ce, it ! is    just. an ex:ample?", 
@@ -211,7 +212,7 @@ function doubleClick(e) {
         }
         
         word_num = String(userSelection).substring(_index+1);
-        triggerword_token_qsn = String(userSelection) + '_' + String(question_number);
+        triggerword_token_qsn = String(userSelection) + '_' + ids[question_number-1]; //String(question_number);
     }
     else
     {
