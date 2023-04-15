@@ -20,7 +20,8 @@ let events_words = {
     "prevent" : [],
     "control" : [],
     "cure" : [],
-    "death" : []
+    "death" : [],
+    "flag": []
 };
 let field_names = ["${text1}", "${text2}", "${text3}", "${text4}", "${text5}"];
 let ids = ["${id1}", "${id2}", "${id3}", "${id4}", "${id5}"];
@@ -57,6 +58,7 @@ window.onload = function() {
   document.getElementById("control_trigger_words").value = "default,";
   document.getElementById("cure_trigger_words").value = "default,";
   document.getElementById("death_trigger_words").value = "default,";
+  document.getElementById("flag_trigger_words").value = "default,";
 }
 
 function isAlphanumeric(str) {
@@ -227,7 +229,8 @@ function doubleClick(e) {
     document.getElementById("control").checked = false;
     document.getElementById("cure").checked = false;
     document.getElementById("death").checked = false;
-    
+    document.getElementById("flag").checked = false;
+     
     document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '"';
  
     var menu = document.getElementById("contextMenu")
@@ -295,6 +298,13 @@ function delete_tw(id)
         s = list_to_string(events_words['death']);
         document.getElementById("death_trigger_words").value = s;
     }
+    index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
+    if (index > -1) 
+    {    
+        events_words["flag"].splice(index, 1); 
+        s = list_to_string(events_words['flag']);
+        document.getElementById("flag_trigger_words").value = s;
+    }
     
     hideMenu();
 }
@@ -323,7 +333,9 @@ function edit_events(id)
     document.getElementById("cure").checked = (index > -1);
     index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("death").checked = (index > -1);
-    
+    index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("flag").checked = (index > -1);
+
     triggerword_token_qsn = extracted_tiggerword_token_qsn;
     
 }
@@ -485,6 +497,26 @@ function events_selected()
             s = list_to_string(events_words['death']);
             document.getElementById("death_trigger_words").value = s;
         }
+
+    var flag_checkBox = document.getElementById("flag");
+    index = events_words["flag"].indexOf(triggerword_token_qsn);
+    if (flag_checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "flag";
+        if(index==-1)
+        {
+            events_words["flag"].push(triggerword_token_qsn);
+            s = list_to_string(events_words['flag']);
+            document.getElementById("flag_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+        {    
+            events_words["flag"].splice(index, 1); 
+            s = list_to_string(events_words['flag']);
+            document.getElementById("flag_trigger_words").value = s;
+        }
   
   hideMenu();
   elem = document.getElementById("p_" + triggerword_token_qsn);
@@ -595,7 +627,14 @@ function populateSelectedItems()
                 if(events != "")
                     events+=", ";
                 events += "death";
-            }            
+            }
+            index = events_words["flag"].indexOf(item);
+            if(index > -1)
+            {
+                if(events != "")
+                    events+=", ";
+                events += "flag";
+            }         
             
             document.getElementById("trigger_words").innerHTML +=
         ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ item + '"> <span id="selection_' + item + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + item + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + item + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
@@ -640,6 +679,7 @@ function toggle_table()
   #treatment_event {display: inline-block;}
   #cure_event {display: inline-block;}
   #death_event {display: inline-block;}
+  #flag_event {display: inline-block;}
   /*#annotate {float: left; width=50%}*/
   /*#sample_table { float: right; width=50%}*/
   
@@ -713,7 +753,9 @@ function toggle_table()
  
   <crowd-instructions link-text="View instructions" link-type="button">
     <short-summary>
-      <p>An Event is defined as something happens in a sentence. In this task, we are trying to identity whether one or more of the following events exist in a given string: <i>infect, spread,symptom,prevent,control, cure, and death</i>. And if an event exist, what is the major <b>triggering word</b> that mostly manifest its occurrence. 
+      <p>An Event is defined as something happens in a sentence. In this task, we are trying to identity whether one or more of the following events exist in a given string: <i>infect, spread,symptom,prevent,control, cure, and death</i>. And if an event exist, what is the major <b>triggering word</b> that mostly manifest its occurrence.
+        <br><br>
+      If there exists explicit negation of an event, we say that the event does NOT exists and do NOT mark it as a triggering word.
         <br><br>
        <table id="events_table" style="margin-right : 20px; margin-left : 150px; float:none;">
  <tr>
@@ -748,6 +790,10 @@ function toggle_table()
     <td>death</td>
     <td> End of life of individuals due to infectious disease.	</td>
  </tr>
+  <tr >
+    <td>flag</td>
+    <td> Special event used when annotated word is ambiguous or when there are multiple triggering words.  </td>
+ </tr>
   </table>
       
       </p>
@@ -760,6 +806,7 @@ function toggle_table()
             <li> Multiple events can be present in a given sentence. Mark all such events.  </li>
             <li> The same event can occur multiple times (at different parts) in the same sentence. Mark all occurrences of the event.  </li>
             <li> You will be able to submit the HIT at the last sentence once you finish annotating all the sentences. </li>
+            <li> Select the "flag" event if you see multiple words as triggering words or any other ambiguous situations, but do not abuse this function. </li>
             </ul></p>
       
     </short-summary>
@@ -779,14 +826,14 @@ Goal: Look for the one word that MOST LIKELY manifests the event's occurrence. Y
 
 <p>
 <span style="color:blue"> <b>CASE I : main verb</b></span> <br>
-Example Sentence: "I was coughing and got a fever yesterday and today just confirmed I got COVID"<br>
+Example Sentence: "I was coughing and got a fever yesterday but today just confirmed I did not get COVID"<br>
 Annotation: There are 2 events of <i>symptom</i> and 1 event of <i>infect</i> in this example as follows (trigger words marked in blue): <br>
 <ol type="a">
 <li>...<span style="color:blue"><b>got</b></span> a fever... ->Event <i>symptom</i></li>
 <li>...was <span style="color:blue"><b>coughing</b></span>... ->Event <i>symptom</i></li> 
-<li>...<span style="color:blue"><b>got</b></span> COVID... ->Event <i>infect</i></li><br>
-Note 1: “fever" and "COVID" are NOT marked as triggering word of the events since the main verbs indicate the event.<br>
-Note 2: Here, due to the presence of “and”, we have two occurrences of the event <i>symptom</i>.<br>
+<li>Note 1: “fever" and "COVID" are NOT marked as triggering word of the events since the main verbs indicate the event.<br>
+Note 2: Here, due to the presence of “and”, we have two occurrences of the event <i>symptom</i>.</li>
+<li>Also "get COVID" appears, but since there is a negation confirming no infection actually took place, there should be no infect event annotation.</li>
 </ol>
 
 Some more examples of main verb as triggering word:
@@ -914,34 +961,34 @@ Some more rare case examples of triggering word:
 
       
     </detailed-instructions>
-    <positive-example>
-      <p>Example 1: "Three tips of preventing being infected by COVID: cover you mouth when coughing, wear a mask, and get a vaccination as required."
+    <positive-example> <p>Example 1: "The government has imposed mask requirement and social distance, so every one please remember to wear a mask and follow the rules to prevent infection and protect our nation from the virus."
       <p>Annotation: <br>
       <ol type="a">
-          <li> <span style="color:blue"> <b>preventing</b></span> -> Event <i>prevent</i> </li>
-          <li> <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i></li>
+          <li> <span style="color:blue"> <b>prevent</b></span> -> Event <i>prevent</i> </li>
+          <li> <span style="color:blue"> <b>protect</b></span> -> Event <i>control</i></li>
       </ol>
       <ol>
-          Note 1: Although semantically "prevent being infected" means not infected, the Event <i>infect</i> still exist because <br> <br>
-          Note 2: "cover mouth", "wear mask", and "get vaccination" are actions to prevent infection, but not triggers for Event <i>prevent</i> because we mark the most likely word 
-        
+          Note 1: Although infection is mentioned, it is prevented, meaning no infection is happening in the sentence, so event "infect" does NOT exist.<br> <br>
+          Note 2: One cannot protect a nation individually, so "protect" triggers event "control", not "prevent". <br><br>
+          <span style="color:red">  Do NOT mark negation of an event. </span>
       </ol>
-       <span style="color:red">  Event is about what occurs in sentence rather than in reality. </span>
       </p>
     </positive-example>
     
     <positive-example>
-      <p>Example 2 : "2000+ travelers from China are infected, and the disease is already spreading among the flight crews."
+      <p>Example 2 : "If you ever have a fever, or cough, or have a sore throat, or have difficulty breathing, do a COVID test immediately since you may have been infected."
       <p>Annotation: <br>
       <ol type="a">
-          <li> <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i></li>
-          <li> <span style="color:blue"> <b>spreading</b></span> -> Event <i>spread</i> </li>
+          <li> ...<span style="color:blue"> <b>have</b></span> a fever... -> Event <i>symptom</i></li>
+          <li> been <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i> </li>
       </ol>
       <ol>   
-          Note: Event <i>symptom</i> DO NOT exist here because no triggering word mentioned in sentence. <br>
-         
+          Note 1: If there are two or more parallel phrases triggering event "symptom", only mark the first triggering word instead of all of them. <br><br>
+          <span style="color:red"> Mark first trigger if 2 or more parallel ones. </span><br><br>
+          Note 2: Intuitively, getting tested for COVID helps to control the pandemic, but event "control" does not exist since it has no trigger words.<br><br>
+          <span style="color:red">  Event must be determined via triggering word and CANNOT be inferred from another Event. </span><br><br>
+          Note 3: Event "infect" has no explicit negation, so it still can happen, meaning an event "infect" exists.<br>
       </ol>
-      <span style="color:red">  Event must be determined via triggering word and CANNOT be inferred from another Event. </span>
     </p>
     </positive-example>
     
@@ -965,7 +1012,7 @@ Some more rare case examples of triggering word:
       </p>
     </negative-example>
     
-        <negative-example> <p>Example 2 : "Two weeks of quarantine is killing me! May God cure my mind and stop my crazy thoughts."</p>
+    <negative-example> <p>Example 2 : "Two weeks of quarantine is killing me! May God cure my mind and stop my crazy thoughts."</p>
             <p>WRONG Annotation: <br>
       <ol type="a">
           <li> <span style="color:blue"> <b>killing</b></span> -> Event <i>death</i> </li>
@@ -1007,6 +1054,7 @@ Some more rare case examples of triggering word:
       <crowd-input style="display:none;" type="text" id="control_trigger_words" name="control_trigger_words"></crowd-input>
       <crowd-input style="display:none;" type="text" id="cure_trigger_words" name="cure_trigger_words"></crowd-input>
       <crowd-input style="display:none;" type="text" id="death_trigger_words" name="death_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="flag_trigger_words" name="flag_trigger_words"></crowd-input>
   </div>
         <div id="contextMenu" class="context-menu" 
         style="display:none; border:1px solid black; width: 400px ;padding: 10px; margin: 10px;">
@@ -1024,6 +1072,8 @@ Some more rare case examples of triggering word:
          <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
          <br>
          <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" > </crowd-checkbox> <label for="death"> death </label> </div>
+         <br>
+         <div id="flag_event"> <crowd-checkbox type="checkbox" id="flag" name="name" value="flag" onclick="document.getElementById('flag').checked = !document.getElementById('flag').checked;" > </crowd-checkbox> <label for="flag"> flag </label> </div>
          <br>
          
          <br>
@@ -1090,7 +1140,7 @@ Some more rare case examples of triggering word:
  </tr>
   <tr >
     <td>control</td>
-    <td> <span style="color:blue"> attemping to control spread of a pandemic. </span> <br>
+    <td> <span style="color:blue"> attempting to control spread of a pandemic. </span> <br>
                                    **can NOT be done by individual effort"		
     </td>
     <td>	"...<b>protect</b> nation from COVID." <br>
