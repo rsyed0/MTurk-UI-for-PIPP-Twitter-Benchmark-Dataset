@@ -145,6 +145,25 @@ document.getElementById("text_question").innerHTML = result;
 
 }
 
+/*function toggleFlag()
+{
+    const checkBox = document.getElementById('flag');
+    console.log(checkBox.checked);
+    console.log(checkBox.value);
+
+    if (checkBox.checked) {
+        checkBox.checked = false;
+        checkBox.value = "off";
+    } else {
+        checkBox.checked = true;
+        checkBox.value = "on";
+    }
+
+    console.log("toggled");
+    console.log(checkBox.checked);
+    console.log(checkBox.value);
+}*/
+
 function previous()
 {
     hideMenu();
@@ -229,7 +248,7 @@ function doubleClick(e) {
     document.getElementById("control").checked = false;
     document.getElementById("cure").checked = false;
     document.getElementById("death").checked = false;
-    document.getElementById("flag").checked = false;
+    document.getElementById("flagg").checked = false;
      
     document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '"';
  
@@ -334,7 +353,7 @@ function edit_events(id)
     index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("death").checked = (index > -1);
     index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("flag").checked = (index > -1);
+    document.getElementById("flagg").checked = (index > -1);
 
     triggerword_token_qsn = extracted_tiggerword_token_qsn;
     
@@ -354,6 +373,8 @@ function events_selected()
     
     events = "";
     let index = 0;
+
+    console.log(document.getElementById("flagg").checked);
     
     var infect_checkBox = document.getElementById("infect");
     index = events_words["infect"].indexOf(triggerword_token_qsn);
@@ -498,7 +519,7 @@ function events_selected()
             document.getElementById("death_trigger_words").value = s;
         }
 
-    var flag_checkBox = document.getElementById("flag");
+    var flag_checkBox = document.getElementById("flagg");
     index = events_words["flag"].indexOf(triggerword_token_qsn);
     if (flag_checkBox.checked == true){
         if(events != "")
@@ -517,6 +538,8 @@ function events_selected()
             s = list_to_string(events_words['flag']);
             document.getElementById("flag_trigger_words").value = s;
         }
+
+    console.log(events_words["flag"]);
   
   hideMenu();
   elem = document.getElementById("p_" + triggerword_token_qsn);
@@ -634,7 +657,9 @@ function populateSelectedItems()
                 if(events != "")
                     events+=", ";
                 events += "flag";
-            }         
+            }     
+
+            console.log(events_words["flag"]);    
             
             document.getElementById("trigger_words").innerHTML +=
         ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ item + '"> <span id="selection_' + item + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + item + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + item + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
@@ -1073,7 +1098,8 @@ Some more rare case examples of triggering word:
          <br>
          <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" > </crowd-checkbox> <label for="death"> death </label> </div>
          <br>
-         <div id="flag_event"> <crowd-checkbox type="checkbox" id="flag" name="name" value="flag" onclick="document.getElementById('flag').checked = !document.getElementById('flag').checked;" > </crowd-checkbox> <label for="flag"> flag </label> </div>
+         <!-- Using flagg b/c flag ID is reserved -->
+         <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
          
          <br>
@@ -1157,6 +1183,11 @@ Some more rare case examples of triggering word:
     <td> <span style="color:blue"> End of life of individuals due to infectious disease.	</span>	</td>
     <td>"Stats about Covid <b>death</b> toll..." <br>
         "The virus <b>kills</b> 50 people..."	</td>
+ </tr>
+  <tr >
+    <td>flag</td>
+    <td> <span style="color:blue"> Special event used when annotation is ambiguous for some reason.  </span> </td>
+    <td>  </td>
  </tr>
   </table>
 
