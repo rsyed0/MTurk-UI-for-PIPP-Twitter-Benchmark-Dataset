@@ -354,6 +354,15 @@ function events_selected()
     
     events = "";
     let index = 0;
+
+    let other_selected = document.getElementById("infect").checked || document.getElementById("spread").checked || document.getElementById("symptom").checked || document.getElementById("prevent").checked || document.getElementById("control").checked || document.getElementById("cure").checked || document.getElementById("death").checked;
+
+    let flag_selected = document.getElementById("flagg").checked;
+
+    if (flag_selected && !other_selected) {
+        alert("Must select a non-flag event also");
+        return;
+    }
     
     var infect_checkBox = document.getElementById("infect");
     index = events_words["infect"].indexOf(triggerword_token_qsn);
