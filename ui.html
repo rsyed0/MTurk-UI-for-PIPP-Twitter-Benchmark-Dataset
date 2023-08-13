@@ -348,9 +348,23 @@ function highlightRange() {
 
 }
 
+function updateDropdowns() {
+
+    document.getElementById("argument-infect").style.visibility = document.getElementById("infect").checked;
+    document.getElementById("argument-spread").style.visibility = document.getElementById("spread").checked;
+    document.getElementById("argument-symptom").style.visibility = document.getElementById("symptom").checked;
+    document.getElementById("argument-prevent").style.visibility = document.getElementById("prevent").checked;
+    document.getElementById("argument-control").style.visibility = document.getElementById("control").checked;
+    document.getElementById("argument-cure").style.visibility = document.getElementById("cure").checked;
+    document.getElementById("argument-death").style.visibility = document.getElementById("death").checked;
+
+}
+
 
 function events_selected()
 {
+
+    // TODO match selected words to events by order
     
     events = "";
     let index = 0;
@@ -365,6 +379,7 @@ function events_selected()
     }
     
     var infect_checkBox = document.getElementById("infect");
+    var infect_dropDown = document.getElementById("argument-infect");
     index = events_words["infect"].indexOf(triggerword_token_qsn);
     if (infect_checkBox.checked == true){
         if(events != "")
@@ -385,6 +400,7 @@ function events_selected()
     }
     
     var spread_checkBox = document.getElementById("spread");
+    var spread_dropDown = document.getElementById("argument-spread");
     index = events_words["spread"].indexOf(triggerword_token_qsn);
     if (spread_checkBox.checked == true){
         if(events != "")
@@ -405,6 +421,7 @@ function events_selected()
         }
     
     var symptom_checkBox = document.getElementById("symptom");
+    var symptom_dropDown = document.getElementById("argument-symptom");
     index = events_words["symptom"].indexOf(triggerword_token_qsn);
     if (symptom_checkBox.checked == true){
         if(events != "")
@@ -425,6 +442,7 @@ function events_selected()
         }
     
     var prevent_checkBox = document.getElementById("prevent");
+    var prevent_dropDown = document.getElementById("argument-prevent");
     index = events_words["prevent"].indexOf(triggerword_token_qsn);
     if (prevent_checkBox.checked == true){
         if(events != "")
@@ -445,6 +463,7 @@ function events_selected()
         }
     
     var control_checkBox = document.getElementById("control");
+    var control_dropDown = document.getElementById("argument-control");
     index = events_words["control"].indexOf(triggerword_token_qsn);
     if (control_checkBox.checked == true){
         if(events != "")
@@ -468,6 +487,7 @@ function events_selected()
     
     
     var cure_checkBox = document.getElementById("cure");
+    var cure_dropDown = document.getElementById("argument-cure");
     index = events_words["cure"].indexOf(triggerword_token_qsn);
     if (cure_checkBox.checked == true){
         if(events != "")
@@ -488,6 +508,7 @@ function events_selected()
         }
     
     var death_checkBox = document.getElementById("death");
+    var death_dropDown = document.getElementById("argument-death");
     index = events_words["death"].indexOf(triggerword_token_qsn);
     if (death_checkBox.checked == true){
         if(events != "")
@@ -1072,23 +1093,75 @@ Some more rare case examples of triggering word:
         <div id="contextMenu" class="context-menu" 
         style="display:none; border:1px solid black; width: 400px ;padding: 10px; margin: 10px;">
         <p id="trigger_word_content"></p> 
-         <div id="infect_event"> <crowd-checkbox type="checkbox" id="infect" name="name" value="infect"  > </crowd-checkbox> <label for="infect"> infect </label> </div>
+         <div id="infect_event"> <crowd-checkbox type="checkbox" id="infect" name="name" value="infect" onclick="updateDropdowns()" > </crowd-checkbox> <label for="infect"> infect </label> </div>
          <br>
-         <div id="spread_event"> <crowd-checkbox type="checkbox" id="spread" name="name" value="spread" ></crowd-checkbox><label for="spread"> spread </label> </div>
+         <div id="spread_event"> <crowd-checkbox type="checkbox" id="spread" name="name" value="spread" onclick="updateDropdowns()" ></crowd-checkbox><label for="spread"> spread </label> </div>
          <br>
-         <div id="symptom_event"> <crowd-checkbox type="checkbox" id="symptom" name="name" value="symptom" > </crowd-checkbox>  <label for="symptom"> symptom </label> </div>
+         <div id="symptom_event"> <crowd-checkbox type="checkbox" id="symptom" name="name" value="symptom" onclick="updateDropdowns()" > </crowd-checkbox>  <label for="symptom"> symptom </label> </div>
          <br>
-         <div id="prevent_event"> <crowd-checkbox type="checkbox" id="prevent" name="name" value="prevent" > </crowd-checkbox> <label for="prevent"> prevent </label> </div>
+         <div id="prevent_event"> <crowd-checkbox type="checkbox" id="prevent" name="name" value="prevent" onclick="updateDropdowns()" > </crowd-checkbox> <label for="prevent"> prevent </label> </div>
          <br>
-         <div id="control_event"> <crowd-checkbox type="checkbox" id="control" name="name" value="control" > </crowd-checkbox>  <label for="control"> control </label> </div>
+         <div id="control_event"> <crowd-checkbox type="checkbox" id="control" name="name" value="control" onclick="updateDropdowns()" > </crowd-checkbox>  <label for="control"> control </label> </div>
          <br>
-         <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
+         <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure" onclick="updateDropdowns()"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
          <br>
-         <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" > </crowd-checkbox> <label for="death"> death </label> </div>
+         <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" onclick="updateDropdowns()" > </crowd-checkbox> <label for="death"> death </label> </div>
          <br>
          <!-- Using flagg b/c flag ID is reserved -->
          <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
+
+         <select name="argument-infect" id="argument-infect" visibility="hidden" required>
+            <option value="person">Person</option>
+            <option value="intruder">Intruder</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-spread" id="argument-spread" visibility="hidden" required>
+            <option value="disease">Disease</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-symptom" id="argument-symptom" visibility="hidden" required>
+            <option value="person">Person</option>
+            <option value="symptom">Symptom</option>
+            <option value="disease">Disease</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-prevent" id="argument-prevent" visibility="hidden" required>
+            <option value="person">Person</option>
+            <option value="intruder">Intruder</option>
+            <option value="means">Means</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-control" id="argument-control" visibility="hidden" required>
+            <option value="agent">Agent</option>
+            <option value="disease">Disease</option>
+            <option value="means">Means</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-cure" id="argument-cure" visibility="hidden" required>
+            <option value="person">Person</option>
+            <option value="disease">Disease</option>
+            <option value="means">Means</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
+
+         <select name="argument-death" id="argument-death" visibility="hidden" required>
+            <option value="person">Person</option>
+            <option value="disease">Disease</option>
+            <option value="place">Place</option>
+            <option value="time">Time</option>
+         </select>
          
          <br>
         <button type="button" onclick="events_selected()">Submit</button>
