@@ -350,15 +350,17 @@ function highlightRange() {
 
 }
 
-function updateDropdowns() {
+function updateDropdowns(sender) {
 
-    document.getElementById("argument-infect").style.visibility = document.getElementById("infect").checked;
-    document.getElementById("argument-spread").style.visibility = document.getElementById("spread").checked;
-    document.getElementById("argument-symptom").style.visibility = document.getElementById("symptom").checked;
-    document.getElementById("argument-prevent").style.visibility = document.getElementById("prevent").checked;
-    document.getElementById("argument-control").style.visibility = document.getElementById("control").checked;
-    document.getElementById("argument-cure").style.visibility = document.getElementById("cure").checked;
-    document.getElementById("argument-death").style.visibility = document.getElementById("death").checked;
+    const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+
+    for (let i=0;i<7;i++) {
+        if (i == sender) {
+            document.getElementById("argument-" + eventTypes[i]).style.display = document.getElementById(eventTypes[i]).checked ? "none" : "inline";
+        } else {
+            document.getElementById("argument-" + eventTypes[i]).style.display = document.getElementById(eventTypes[i]).checked ? "inline" : "none";
+        }
+    }
 
 }
 
@@ -1139,39 +1141,39 @@ Some more rare case examples of triggering word:
         <div id="contextMenu" class="context-menu" 
         style="display:none; border:1px solid black; width: 400px ;padding: 10px; margin: 10px;">
         <p id="trigger_word_content"></p> 
-         <div id="infect_event"> <crowd-checkbox type="checkbox" id="infect" name="name" value="infect" onclick="updateDropdowns()" > </crowd-checkbox> <label for="infect"> infect </label> </div>
+         <div id="infect_event"> <crowd-checkbox type="checkbox" id="infect" name="name" value="infect" onclick="updateDropdowns(0)" > </crowd-checkbox> <label for="infect"> infect </label> </div>
          <br>
-         <div id="spread_event"> <crowd-checkbox type="checkbox" id="spread" name="name" value="spread" onclick="updateDropdowns()" ></crowd-checkbox><label for="spread"> spread </label> </div>
+         <div id="spread_event"> <crowd-checkbox type="checkbox" id="spread" name="name" value="spread" onclick="updateDropdowns(1)" ></crowd-checkbox><label for="spread"> spread </label> </div>
          <br>
-         <div id="symptom_event"> <crowd-checkbox type="checkbox" id="symptom" name="name" value="symptom" onclick="updateDropdowns()" > </crowd-checkbox>  <label for="symptom"> symptom </label> </div>
+         <div id="symptom_event"> <crowd-checkbox type="checkbox" id="symptom" name="name" value="symptom" onclick="updateDropdowns(2)" > </crowd-checkbox>  <label for="symptom"> symptom </label> </div>
          <br>
-         <div id="prevent_event"> <crowd-checkbox type="checkbox" id="prevent" name="name" value="prevent" onclick="updateDropdowns()" > </crowd-checkbox> <label for="prevent"> prevent </label> </div>
+         <div id="prevent_event"> <crowd-checkbox type="checkbox" id="prevent" name="name" value="prevent" onclick="updateDropdowns(3)" > </crowd-checkbox> <label for="prevent"> prevent </label> </div>
          <br>
-         <div id="control_event"> <crowd-checkbox type="checkbox" id="control" name="name" value="control" onclick="updateDropdowns()" > </crowd-checkbox>  <label for="control"> control </label> </div>
+         <div id="control_event"> <crowd-checkbox type="checkbox" id="control" name="name" value="control" onclick="updateDropdowns(4)" > </crowd-checkbox>  <label for="control"> control </label> </div>
          <br>
-         <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure" onclick="updateDropdowns()"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
+         <div id="cure_event"> <crowd-checkbox type="checkbox" id="cure" name="name" value="cure" onclick="updateDropdowns(5)"  > </crowd-checkbox> <label for="cure"> cure </label> </div>
          <br>
-         <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" onclick="updateDropdowns()" > </crowd-checkbox> <label for="death"> death </label> </div>
+         <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" onclick="updateDropdowns(6)" > </crowd-checkbox> <label for="death"> death </label> </div>
          <br>
          <!-- Using flagg b/c flag ID is reserved -->
          <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
 
          <!-- TODO figure out how to make them hidden -->
-         <select name="argument-infect" id="argument-infect" visibility="hidden" required>
+         <select name="argument-infect" id="argument-infect" style="display: none;" required>
             <option value="person">Person</option>
             <option value="intruder">Intruder</option>
             <option value="place">Place</option>
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-spread" id="argument-spread" visibility="hidden" required>
+         <select name="argument-spread" id="argument-spread" style="display: none;" required>
             <option value="disease">Disease</option>
             <option value="place">Place</option>
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-symptom" id="argument-symptom" visibility="hidden" required>
+         <select name="argument-symptom" id="argument-symptom" style="display: none;" required>
             <option value="person">Person</option>
             <option value="symptom">Symptom</option>
             <option value="disease">Disease</option>
@@ -1179,7 +1181,7 @@ Some more rare case examples of triggering word:
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-prevent" id="argument-prevent" visibility="hidden" required>
+         <select name="argument-prevent" id="argument-prevent" style="display: none;" required>
             <option value="person">Person</option>
             <option value="intruder">Intruder</option>
             <option value="means">Means</option>
@@ -1187,7 +1189,7 @@ Some more rare case examples of triggering word:
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-control" id="argument-control" visibility="hidden" required>
+         <select name="argument-control" id="argument-control" style="display: none;" required>
             <option value="agent">Agent</option>
             <option value="disease">Disease</option>
             <option value="means">Means</option>
@@ -1195,7 +1197,7 @@ Some more rare case examples of triggering word:
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-cure" id="argument-cure" visibility="hidden" required>
+         <select name="argument-cure" id="argument-cure" style="display: none;" required>
             <option value="person">Person</option>
             <option value="disease">Disease</option>
             <option value="means">Means</option>
@@ -1203,7 +1205,7 @@ Some more rare case examples of triggering word:
             <option value="time">Time</option>
          </select>
 
-         <select name="argument-death" id="argument-death" visibility="hidden" required>
+         <select name="argument-death" id="argument-death" style="display: none;" required>
             <option value="person">Person</option>
             <option value="disease">Disease</option>
             <option value="place">Place</option>
