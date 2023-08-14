@@ -336,6 +336,8 @@ function edit_events(id)
     index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("flagg").checked = (index > -1);
 
+    // TODO load argument(s) from events arrays
+
     triggerword_token_qsn = extracted_tiggerword_token_qsn;
     
 }
@@ -380,6 +382,12 @@ function events_selected()
     
     var infect_checkBox = document.getElementById("infect");
     var infect_dropDown = document.getElementById("argument-infect");
+    var selectedArg = infect_dropDown.value;
+
+    // add argument to triggerword token qsn
+    var idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["infect"].indexOf(triggerword_token_qsn);
     if (infect_checkBox.checked == true){
         if(events != "")
@@ -387,6 +395,7 @@ function events_selected()
         events += "infect";
         if(index==-1)
         {
+            // creating event
             events_words["infect"].push(triggerword_token_qsn);
             s = list_to_string(events_words['infect']);
             document.getElementById("infect_trigger_words").value = s;
@@ -394,13 +403,20 @@ function events_selected()
     }
     else if (index > -1) 
     {
-            events_words["infect"].splice(index, 1); 
-            s = list_to_string(events_words['infect']);
-            document.getElementById("infect_trigger_words").value = s;
+        // removing event
+        events_words["infect"].splice(index, 1);
+        s = list_to_string(events_words['infect']);
+        document.getElementById("infect_trigger_words").value = s;
     }
     
     var spread_checkBox = document.getElementById("spread");
     var spread_dropDown = document.getElementById("argument-spread");
+    var selectedArg = spread_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["spread"].indexOf(triggerword_token_qsn);
     if (spread_checkBox.checked == true){
         if(events != "")
@@ -422,6 +438,12 @@ function events_selected()
     
     var symptom_checkBox = document.getElementById("symptom");
     var symptom_dropDown = document.getElementById("argument-symptom");
+    var selectedArg = symptom_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["symptom"].indexOf(triggerword_token_qsn);
     if (symptom_checkBox.checked == true){
         if(events != "")
@@ -443,6 +465,12 @@ function events_selected()
     
     var prevent_checkBox = document.getElementById("prevent");
     var prevent_dropDown = document.getElementById("argument-prevent");
+    var selectedArg = prevent_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["prevent"].indexOf(triggerword_token_qsn);
     if (prevent_checkBox.checked == true){
         if(events != "")
@@ -464,6 +492,12 @@ function events_selected()
     
     var control_checkBox = document.getElementById("control");
     var control_dropDown = document.getElementById("argument-control");
+    var selectedArg = control_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["control"].indexOf(triggerword_token_qsn);
     if (control_checkBox.checked == true){
         if(events != "")
@@ -488,6 +522,12 @@ function events_selected()
     
     var cure_checkBox = document.getElementById("cure");
     var cure_dropDown = document.getElementById("argument-cure");
+    var selectedArg = cure_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["cure"].indexOf(triggerword_token_qsn);
     if (cure_checkBox.checked == true){
         if(events != "")
@@ -509,6 +549,12 @@ function events_selected()
     
     var death_checkBox = document.getElementById("death");
     var death_dropDown = document.getElementById("argument-death");
+    var selectedArg = death_dropDown.value;
+
+    // add argument to triggerword token qsn
+    idx = triggerword_token_qsn.lastIndexOf("_");
+    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
     index = events_words["death"].indexOf(triggerword_token_qsn);
     if (death_checkBox.checked == true){
         if(events != "")
@@ -1111,6 +1157,7 @@ Some more rare case examples of triggering word:
          <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
 
+         <!-- TODO figure out how to make them hidden -->
          <select name="argument-infect" id="argument-infect" visibility="hidden" required>
             <option value="person">Person</option>
             <option value="intruder">Intruder</option>
