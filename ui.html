@@ -386,11 +386,13 @@ function events_selected()
     var infect_dropDown = document.getElementById("argument-infect");
     var selectedArg = infect_dropDown.value;
 
-    // add argument to triggerword token qsn
-    var idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    console.log(selectedArg);
 
-    index = events_words["infect"].indexOf(triggerword_token_qsn);
+    // add argument to triggerword token qsn
+    var idx = triggerword_token_qsn.indexOf("_");
+    var triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
+    index = events_words["infect"].indexOf(triggerword_arg_token_qsn);
     if (infect_checkBox.checked == true){
         if(events != "")
             events+=", ";
@@ -398,7 +400,7 @@ function events_selected()
         if(index==-1)
         {
             // creating event
-            events_words["infect"].push(triggerword_token_qsn);
+            events_words["infect"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['infect']);
             document.getElementById("infect_trigger_words").value = s;
         }
@@ -416,17 +418,17 @@ function events_selected()
     var selectedArg = spread_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["spread"].indexOf(triggerword_token_qsn);
+    index = events_words["spread"].indexOf(triggerword_arg_token_qsn);
     if (spread_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "spread";
         if(index==-1)
         {
-            events_words["spread"].push(triggerword_token_qsn);
+            events_words["spread"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['spread']);
             document.getElementById("spread_trigger_words").value = s;
         }
@@ -443,17 +445,19 @@ function events_selected()
     var selectedArg = symptom_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["symptom"].indexOf(triggerword_token_qsn);
+    console.log(triggerword_arg_token_qsn);
+
+    index = events_words["symptom"].indexOf(triggerword_arg_token_qsn);
     if (symptom_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "symptom";
         if(index==-1)
         {
-            events_words["symptom"].push(triggerword_token_qsn);
+            events_words["symptom"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['symptom']);
             document.getElementById("symptom_trigger_words").value = s;
         }
@@ -470,17 +474,17 @@ function events_selected()
     var selectedArg = prevent_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["prevent"].indexOf(triggerword_token_qsn);
+    index = events_words["prevent"].indexOf(triggerword_arg_token_qsn);
     if (prevent_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "prevent";
         if(index==-1)
         {
-            events_words["prevent"].push(triggerword_token_qsn);
+            events_words["prevent"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['prevent']);
             document.getElementById("prevent_trigger_words").value = s;
         }
@@ -497,17 +501,17 @@ function events_selected()
     var selectedArg = control_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["control"].indexOf(triggerword_token_qsn);
+    index = events_words["control"].indexOf(triggerword_arg_token_qsn);
     if (control_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "control";
         if(index==-1)
         {
-            events_words["control"].push(triggerword_token_qsn);
+            events_words["control"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['control']);
             document.getElementById("control_trigger_words").value = s;
         }
@@ -527,17 +531,17 @@ function events_selected()
     var selectedArg = cure_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["cure"].indexOf(triggerword_token_qsn);
+    index = events_words["cure"].indexOf(triggerword_arg_token_qsn);
     if (cure_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "cure";
         if(index==-1)
         {
-            events_words["cure"].push(triggerword_token_qsn);
+            events_words["cure"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['cure']);
             document.getElementById("cure_trigger_words").value = s;
         }
@@ -554,17 +558,17 @@ function events_selected()
     var selectedArg = death_dropDown.value;
 
     // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.lastIndexOf("_");
-    triggerword_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    idx = triggerword_token_qsn.indexOf("_");
+    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    index = events_words["death"].indexOf(triggerword_token_qsn);
+    index = events_words["death"].indexOf(triggerword_arg_token_qsn);
     if (death_checkBox.checked == true){
         if(events != "")
             events+=", ";
         events += "death";
         if(index==-1)
         {
-            events_words["death"].push(triggerword_token_qsn);
+            events_words["death"].push(triggerword_arg_token_qsn);
             s = list_to_string(events_words['death']);
             document.getElementById("death_trigger_words").value = s;
         }
@@ -630,6 +634,8 @@ function getInfo(word_token_num, ch)
     let __index = _left.lastIndexOf("_");
     let token = _left.substring(__index+1);
     let word = _left.substring(0, __index);
+
+    console.log(word);
     
     if(ch == 'w')
     {
