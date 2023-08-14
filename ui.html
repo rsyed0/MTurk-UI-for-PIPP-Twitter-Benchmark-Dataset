@@ -311,6 +311,7 @@ function delete_tw(id)
 
 function edit_events(id)
 {
+
     let _index = id.indexOf('_');
     let extracted_tiggerword_token_qsn = id.substring(_index+1);
     trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
@@ -318,8 +319,32 @@ function edit_events(id)
  
     var menu = document.getElementById("contextMenu")
     menu.style.display = 'block';
+
+    const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+
+    console.log(events_words["infect"]);
+    console.log(extracted_tiggerword_token_qsn);
+
+    for (let i=0;i<7;i++) {
+        let contains_ettq = false;
+        for (let j=0;j<events_words[eventTypes[i]].length;j++) {
+            let event_desc = events_words[eventTypes[i]][j];
+            if (event_desc.includes(extracted_tiggerword_token_qsn)) {
+                contains_ettq = true;
+
+                let event_arg = event_desc.substring(event_desc.indexOf("_"));
+                let dropdown = document.getElementById("argument-" + eventTypes[i]);
+
+                // TODO set dropdown to arg with value event_arg
+
+                break;
+            }
+        }
+        document.getElementById(eventTypes[i]).checked = contains_ettq;
+
+    }
     
-    let index = events_words["infect"].indexOf(extracted_tiggerword_token_qsn);
+    /*let index = events_words["infect"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("infect").checked = (index > -1);
     index = events_words["spread"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("spread").checked = (index > -1);
@@ -334,7 +359,7 @@ function edit_events(id)
     index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
     document.getElementById("death").checked = (index > -1);
     index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("flagg").checked = (index > -1);
+    document.getElementById("flagg").checked = (index > -1);*/
 
     // TODO load argument(s) from events arrays
 
@@ -390,7 +415,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     var idx = triggerword_token_qsn.indexOf("_");
-    var triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    var triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn; //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
     index = events_words["infect"].indexOf(triggerword_arg_token_qsn);
     if (infect_checkBox.checked == true){
@@ -419,7 +444,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     index = events_words["spread"].indexOf(triggerword_arg_token_qsn);
     if (spread_checkBox.checked == true){
@@ -446,7 +471,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     console.log(triggerword_arg_token_qsn);
 
@@ -475,7 +500,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     index = events_words["prevent"].indexOf(triggerword_arg_token_qsn);
     if (prevent_checkBox.checked == true){
@@ -502,7 +527,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     index = events_words["control"].indexOf(triggerword_arg_token_qsn);
     if (control_checkBox.checked == true){
@@ -532,7 +557,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     index = events_words["cure"].indexOf(triggerword_arg_token_qsn);
     if (cure_checkBox.checked == true){
@@ -559,7 +584,7 @@ function events_selected()
 
     // add argument to triggerword token qsn
     idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
 
     index = events_words["death"].indexOf(triggerword_arg_token_qsn);
     if (death_checkBox.checked == true){
@@ -635,6 +660,7 @@ function getInfo(word_token_num, ch)
     let token = _left.substring(__index+1);
     let word = _left.substring(0, __index);
 
+    console.log(word_token_num);
     console.log(word);
     
     if(ch == 'w')
