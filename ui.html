@@ -423,7 +423,7 @@ function events_selected()
     if (infect_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "infect";
+        events += "infect (" + selectedArg + ")";
         if(index==-1)
         {
             // creating event
@@ -452,7 +452,7 @@ function events_selected()
     if (spread_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "spread";
+        events += "spread (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["spread"].push(triggerword_arg_token_qsn);
@@ -481,7 +481,7 @@ function events_selected()
     if (symptom_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "symptom";
+        events += "symptom (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["symptom"].push(triggerword_arg_token_qsn);
@@ -508,7 +508,7 @@ function events_selected()
     if (prevent_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "prevent";
+        events += "prevent (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["prevent"].push(triggerword_arg_token_qsn);
@@ -535,7 +535,7 @@ function events_selected()
     if (control_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "control";
+        events += "control (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["control"].push(triggerword_arg_token_qsn);
@@ -565,7 +565,7 @@ function events_selected()
     if (cure_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "cure";
+        events += "cure (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["cure"].push(triggerword_arg_token_qsn);
@@ -592,7 +592,7 @@ function events_selected()
     if (death_checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "death";
+        events += "death (" + selectedArg + ")";
         if(index==-1)
         {
             events_words["death"].push(triggerword_arg_token_qsn);
