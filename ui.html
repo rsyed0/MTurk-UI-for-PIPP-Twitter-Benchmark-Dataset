@@ -23,7 +23,7 @@ let events_words = {
     "death" : [],
     "flag": []
 };
-let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
+let field_names = ['${text1 aaa bbb ccc}', '${text2}', '${text3}', '${text4}', '${text5}'];
 let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
 let current_table = "small";
 
@@ -198,9 +198,71 @@ function list_to_string(li)
 }
 
   
-function doubleClick(e) {
+function select(e) {
     
-    e.preventDefault();
+    // e.preventDefault();
+    userSelection = window.getSelection();
+    console.log(userSelection);
+    if (userSelection === null) return;
+    startNode = userSelection.anchorNode;
+    endNode = userSelection.focusNode;
+    questionNode = document.getElementById("text_question");
+    if (startNode.parentNode !== questionNode && startNode.parentNode.parentNode !== questionNode || 
+        endNode.parentNode !== questionNode && endNode.parentNode.parentNode !== questionNode) {
+        return;
+    }
+    if (startNode.parentNode !== questionNode) startNode = startNode.parentNode;
+    if (endNode.parentNode !== questionNode) endNode = endNode.parentNode;
+    startNodeIndex = 0; endNodeIndex = 0;
+    for (var i = 0; i < questionNode.childNodes.length; i++) {
+        if (questionNode.childNodes[i] === startNode) {
+            startNodeIndex = i;
+        }
+        if (questionNode.childNodes[i] === endNode) {
+            endNodeIndex = i;
+        }
+    }
+    if (startNodeIndex > endNodeIndex) {
+        var temp = startNodeIndex;
+        startNodeIndex = endNodeIndex;
+        endNodeIndex = temp;
+    }
+    selected = "";
+    for (var i = startNodeIndex; i <= endNodeIndex; i++) {
+        if (questionNode.childNodes[i].nodeName === "SUP") {
+            continue;
+        }
+        selected += questionNode.childNodes[i].textContent;
+    }
+    selected = selected.trim();
+    if (selected === "") {
+        return;
+    }
+    trigger_word = selected;
+    console.log(trigger_word);
+           
+    document.getElementById("infect").checked = false;
+    document.getElementById("spread").checked = false;
+    document.getElementById("symptom").checked = false;
+    document.getElementById("prevent").checked = false;
+    document.getElementById("control").checked = false;
+    document.getElementById("cure").checked = false;
+    document.getElementById("death").checked = false;
+    document.getElementById("flagg").checked = false;
+     
+    document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '"';
+ 
+    var menu = document.getElementById("contextMenu")
+    menu.style.display = 'block';
+
+}
+
+var t = ''
+function dragText(e) {
+    t = (document.all) ? document.selection.createRange().text : document.getSelection();
+
+    document.getElementById('input').value = t;
+    
     userSelection = window.getSelection().getRangeAt(0);
     let _index = String(userSelection).lastIndexOf("_");
     if(_index>0)
@@ -235,7 +297,6 @@ function doubleClick(e) {
  
     var menu = document.getElementById("contextMenu")
     menu.style.display = 'block';
-
 }
 
 function delete_tw(id)
@@ -1159,7 +1220,7 @@ Some more rare case examples of triggering word:
   <div id="questions" style="display:none;">
   </div>
      <!--<p id="questions">-->
-     <p style="width:350px; font-size:100%; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>
+     <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;" id="text_question" onmouseup="select(event);"></p>
      <!--<p style="width:350px; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>-->
     <!--</p>-->
   <div>
