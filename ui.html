@@ -440,15 +440,27 @@ function highlightRange() {
 
 function updateDropdowns(sender) {
 
+    console.log("reg " + sender);
+
     const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
 
     for (let i=0;i<7;i++) {
         if (i == sender) {
-            document.getElementById("argument-" + eventTypes[i]).style.display = document.getElementById(eventTypes[i]).checked ? "none" : "inline";
+            document.getElementById("argument-" + eventTypes[i] + "-div").style.display = document.getElementById(eventTypes[i]).checked ? "none" : "inline";
         } else {
-            document.getElementById("argument-" + eventTypes[i]).style.display = document.getElementById(eventTypes[i]).checked ? "inline" : "none";
+            document.getElementById("argument-" + eventTypes[i] + "-div").style.display = document.getElementById(eventTypes[i]).checked ? "inline" : "none";
         }
     }
+
+}
+
+function updateOtherDropdowns(i) {
+
+    console.log("other " + i);
+
+    const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+
+    document.getElementById("argument-" + eventTypes[i] + "-input").style.display = (document.getElementById("argument-" + eventTypes[i]).value == "other") ? "inline" : "none";
 
 }
 
@@ -1254,65 +1266,93 @@ Some more rare case examples of triggering word:
          <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
 
-         <!-- TODO figure out how to make them hidden -->
-         <select name="argument-infect" id="argument-infect" style="display: none;" required>
-            <option id="argument-infect-trigger" value="trigger">Trigger</option>
-            <option id="argument-infect-person" value="person">Person</option>
-            <option id="argument-infect-intruder" value="intruder">Intruder</option>
-            <option id="argument-infect-place" value="place">Place</option>
-            <option id="argument-infect-time" value="time">Time</option>
-         </select>
+         <div id="argument-infect-div">
+             <select name="argument-infect" id="argument-infect" style="display: none;" onChange="updateOtherDropdowns(0)" required>
+                <option id="argument-infect-trigger" value="trigger">Trigger</option>
+                <option id="argument-infect-person" value="person">Person</option>
+                <option id="argument-infect-intruder" value="intruder">Intruder</option>
+                <option id="argument-infect-place" value="place">Place</option>
+                <option id="argument-infect-time" value="time">Time</option>
+                <option id="argument-infect-other" value="other">Other</option>
+             </select>
 
-         <select name="argument-spread" id="argument-spread" style="display: none;" required>
-            <option id="argument-spread-trigger" value="trigger">Trigger</option>
-            <option id="argument-spread-disease" value="disease">Disease</option>
-            <option id="argument-spread-place" value="place">Place</option>
-            <option id="argument-spread-time" value="time">Time</option>
-         </select>
+             <input type="text" id="argument-infect-input" style="display: none;"></input>
+         </div>
 
-         <select name="argument-symptom" id="argument-symptom" style="display: none;" required>
-            <option id="argument-symptom-trigger" value="trigger">Trigger</option>
-            <option id="argument-spread-person" value="person">Person</option>
-            <option id="argument-spread-symptom" value="symptom">Symptom</option>
-            <option id="argument-spread-disease" value="disease">Disease</option>
-            <option id="argument-spread-place" value="place">Place</option>
-            <option id="argument-spread-time" value="time">Time</option>
-         </select>
+         <div id="argument-spread-div">
+             <select name="argument-spread" id="argument-spread" style="display: none;" onChange="updateOtherDropdowns(1)" required>
+                <option id="argument-spread-trigger" value="trigger">Trigger</option>
+                <option id="argument-spread-disease" value="disease">Disease</option>
+                <option id="argument-spread-place" value="place">Place</option>
+                <option id="argument-spread-time" value="time">Time</option>
+             </select>
 
-         <select name="argument-prevent" id="argument-prevent" style="display: none;" required>
-            <option id="argument-prevent-trigger" value="trigger">Trigger</option>
-            <option id="argument-prevent-person" value="person">Person</option>
-            <option id="argument-prevent-intruder" value="intruder">Intruder</option>
-            <option id="argument-prevent-disease" value="means">Means</option>
-            <option id="argument-prevent-place" value="place">Place</option>
-            <option id="argument-prevent-time" value="time">Time</option>
-         </select>
+             <input type="text" id="argument-spread-input" style="display: none;"></input>
+         </div>
 
-         <select name="argument-control" id="argument-control" style="display: none;" required>
-            <option id="argument-control-trigger" value="trigger">Trigger</option>
-            <option id="argument-control-agent" value="agent">Agent</option>
-            <option id="argument-control-disease" value="disease">Disease</option>
-            <option id="argument-control-means" value="means">Means</option>
-            <option id="argument-control-place" value="place">Place</option>
-            <option id="argument-control-time" value="time">Time</option>
-         </select>
+         <div id="argument-symptom-div">
+             <select name="argument-symptom" id="argument-symptom" style="display: none;" onChange="updateOtherDropdowns(2)" required>
+                <option id="argument-symptom-trigger" value="trigger">Trigger</option>
+                <option id="argument-symptom-person" value="person">Person</option>
+                <option id="argument-symptom-symptom" value="symptom">Symptom</option>
+                <option id="argument-symptom-disease" value="disease">Disease</option>
+                <option id="argument-symptom-place" value="place">Place</option>
+                <option id="argument-symptom-time" value="time">Time</option>
+             </select>
 
-         <select name="argument-cure" id="argument-cure" style="display: none;" required>
-            <option id="argument-cure-trigger" value="trigger">Trigger</option>
-            <option id="argument-cure-person" value="person">Person</option>
-            <option id="argument-cure-disease" value="disease">Disease</option>
-            <option id="argument-cure-means" value="means">Means</option>
-            <option id="argument-cure-place" value="place">Place</option>
-            <option id="argument-cure-time" value="time">Time</option>
-         </select>
+             <input type="text" id="argument-symptom-input" style="display: none;"></input>
+         </div>
 
-         <select name="argument-death" id="argument-death" style="display: none;" required>
-            <option id="argument-death-trigger" value="trigger">Trigger</option>
-            <option id="argument-death-person" value="person">Person</option>
-            <option id="argument-death-disease" value="disease">Disease</option>
-            <option id="argument-death-place" value="place">Place</option>
-            <option id="argument-death-time" value="time">Time</option>
-         </select>
+         <div id="argument-prevent-div">
+             <select name="argument-prevent" id="argument-prevent" style="display: none;" onChange="updateOtherDropdowns(3)" required>
+                <option id="argument-prevent-trigger" value="trigger">Trigger</option>
+                <option id="argument-prevent-person" value="person">Person</option>
+                <option id="argument-prevent-intruder" value="intruder">Intruder</option>
+                <option id="argument-prevent-disease" value="means">Means</option>
+                <option id="argument-prevent-place" value="place">Place</option>
+                <option id="argument-prevent-time" value="time">Time</option>
+             </select>
+
+             <input type="text" id="argument-prevent-input" style="display: none;"></input>
+         </div>
+
+         <div id="argument-control-div">
+             <select name="argument-control" id="argument-control" style="display: none;" onChange="updateOtherDropdowns(4)" required>
+                <option id="argument-control-trigger" value="trigger">Trigger</option>
+                <option id="argument-control-agent" value="agent">Agent</option>
+                <option id="argument-control-disease" value="disease">Disease</option>
+                <option id="argument-control-means" value="means">Means</option>
+                <option id="argument-control-place" value="place">Place</option>
+                <option id="argument-control-time" value="time">Time</option>
+             </select>
+
+             <input type="text" id="argument-control-input" style="display: none;"></input>
+         </div>
+
+         <div id="argument-cure-div">
+             <select name="argument-cure" id="argument-cure" style="display: none;" onChange="updateOtherDropdowns(5)" required>
+                <option id="argument-cure-trigger" value="trigger">Trigger</option>
+                <option id="argument-cure-person" value="person">Person</option>
+                <option id="argument-cure-disease" value="disease">Disease</option>
+                <option id="argument-cure-means" value="means">Means</option>
+                <option id="argument-cure-place" value="place">Place</option>
+                <option id="argument-cure-time" value="time">Time</option>
+             </select>
+
+             <input type="text" id="argument-cure-input" style="display: none;"></input>
+         </div>
+
+         <div id="argument-death-div">
+             <select name="argument-death" id="argument-death" style="display: none;" onChange="updateOtherDropdowns(6)" required>
+                <option id="argument-death-trigger" value="trigger">Trigger</option>
+                <option id="argument-death-person" value="person">Person</option>
+                <option id="argument-death-disease" value="disease">Disease</option>
+                <option id="argument-death-place" value="place">Place</option>
+                <option id="argument-death-time" value="time">Time</option>
+             </select>
+
+             <input type="text" id="argument-death-input" style="display: none;"></input>
+         </div>
          
          <br>
         <button type="button" onclick="events_selected()">Submit</button>
