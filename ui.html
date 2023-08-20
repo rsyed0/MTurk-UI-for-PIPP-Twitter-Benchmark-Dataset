@@ -387,6 +387,10 @@ function edit_events(id)
     console.log(extracted_tiggerword_token_qsn);
 
     for (let i=0;i<7;i++) {
+        document.getElementById("argument-" + eventTypes[i] + "-div").style.display = "none";
+    }
+
+    for (let i=0;i<7;i++) {
         let contains_ettq = false;
         for (let j=0;j<events_words[eventTypes[i]].length;j++) {
             let event_desc = events_words[eventTypes[i]][j];
@@ -396,9 +400,18 @@ function edit_events(id)
                 let event_arg = event_desc.substring(0,event_desc.indexOf("_"));
                 let dropdown = document.getElementById("argument-" + eventTypes[i]);
 
-                // TODO set dropdown to option with value event_arg
                 console.log("argument-" + eventTypes[i] + "-" + event_arg);
-                document.getElementById("argument-" + eventTypes[i] + "-" + event_arg).selected = true;
+
+                document.getElementById("argument-" + eventTypes[i] + "-div").style.display = "inline";
+                var selected_option = document.getElementById("argument-" + eventTypes[i] + "-" + event_arg);
+                if (selected_option === null) {
+                    // other option was selected
+                    // TODO: find a way to differentiate other w/ some option in input vs that option
+                    document.getElementById("argument-" + eventTypes[i] + "-other").selected = true;
+                    document.getElementById("argument-" + eventTypes[i] + "-input").value = event_arg;
+                } else {
+                    selected_option.selected = true;
+                }
 
                 break;
             }
@@ -406,23 +419,9 @@ function edit_events(id)
         document.getElementById(eventTypes[i]).checked = contains_ettq;
 
     }
-    
-    /*let index = events_words["infect"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("infect").checked = (index > -1);
-    index = events_words["spread"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("spread").checked = (index > -1);
-    index = events_words["symptom"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("symptom").checked = (index > -1);
-    index = events_words["prevent"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("prevent").checked = (index > -1);
-    index = events_words["control"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("control").checked = (index > -1);
-    index = events_words["cure"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("cure").checked = (index > -1);
-    index = events_words["death"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("death").checked = (index > -1);
-    index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("flagg").checked = (index > -1);*/
+
+    let index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
+    document.getElementById("flagg").checked = (index > -1);
 
     // TODO load argument(s) from events arrays
 
@@ -467,8 +466,6 @@ function updateOtherDropdowns(i) {
 
 function events_selected()
 {
-
-    // TODO match selected words to events by order
     
     events = "";
     let index = 0;
@@ -481,204 +478,50 @@ function events_selected()
         alert("Must select a non-flag event also");
         return;
     }
-    
-    var infect_checkBox = document.getElementById("infect");
-    var infect_dropDown = document.getElementById("argument-infect");
-    var selectedArg = infect_dropDown.value;
 
-    console.log(selectedArg);
-
-    // add argument to triggerword token qsn
     var idx = triggerword_token_qsn.indexOf("_");
-    var triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn; //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+    console.log("Test: " + triggerword_token_qsn);
 
-    index = events_words["infect"].indexOf(triggerword_arg_token_qsn);
-    if (infect_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "infect (" + selectedArg + ")";
-        if(index==-1)
+    const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+
+    for (let i=0;i<7;i++) {
+        let eventType = eventTypes[i];
+        var checkBox = document.getElementById(eventType);
+        var dropDown = document.getElementById("argument-" + eventType);
+        var selectedArg = dropDown.value;
+
+        if (selectedArg === "other") {
+            selectedArg = document.getElementById("argument-"+ eventType +"-input").value;
+        }
+
+        console.log(selectedArg);
+
+        // add argument to triggerword token qsn
+        var triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn; 
+        //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
+        index = events_words[eventType].indexOf(triggerword_arg_token_qsn);
+        if (checkBox.checked == true){
+            if(events != "")
+                events+=", ";
+            events += eventType + " (" + selectedArg + ")";
+            if(index==-1)
+            {
+                // creating event
+                events_words[eventType].push(triggerword_arg_token_qsn);
+                s = list_to_string(events_words[eventType]);
+                document.getElementById(eventType + "_trigger_words").value = s;
+            }
+        }
+        else if (index > -1) 
         {
-            // creating event
-            events_words["infect"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['infect']);
-            document.getElementById("infect_trigger_words").value = s;
+            // removing event
+            events_words[eventType].splice(index, 1);
+            s = list_to_string(events_words[eventType]);
+            document.getElementById(eventType + "_trigger_words").value = s;
         }
+
     }
-    else if (index > -1) 
-    {
-        // removing event
-        events_words["infect"].splice(index, 1);
-        s = list_to_string(events_words['infect']);
-        document.getElementById("infect_trigger_words").value = s;
-    }
-    
-    var spread_checkBox = document.getElementById("spread");
-    var spread_dropDown = document.getElementById("argument-spread");
-    var selectedArg = spread_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    index = events_words["spread"].indexOf(triggerword_arg_token_qsn);
-    if (spread_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "spread (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["spread"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['spread']);
-            document.getElementById("spread_trigger_words").value = s;
-        }
-    }
-    else if (index > -1) 
-        {    
-            events_words["spread"].splice(index, 1); 
-            s = list_to_string(events_words['spread']);
-            document.getElementById("spread_trigger_words").value = s;
-        }
-    
-    var symptom_checkBox = document.getElementById("symptom");
-    var symptom_dropDown = document.getElementById("argument-symptom");
-    var selectedArg = symptom_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    console.log(triggerword_arg_token_qsn);
-
-    index = events_words["symptom"].indexOf(triggerword_arg_token_qsn);
-    if (symptom_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "symptom (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["symptom"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['symptom']);
-            document.getElementById("symptom_trigger_words").value = s;
-        }
-    }
-    else if (index > -1) 
-        {    
-            events_words["symptom"].splice(index, 1); 
-            s = list_to_string(events_words['symptom']);
-            document.getElementById("symptom_trigger_words").value = s;
-        }
-    
-    var prevent_checkBox = document.getElementById("prevent");
-    var prevent_dropDown = document.getElementById("argument-prevent");
-    var selectedArg = prevent_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    index = events_words["prevent"].indexOf(triggerword_arg_token_qsn);
-    if (prevent_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "prevent (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["prevent"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['prevent']);
-            document.getElementById("prevent_trigger_words").value = s;
-        }
-    }
-    else if (index > -1) 
-        {    
-            events_words["prevent"].splice(index, 1); 
-            s = list_to_string(events_words['prevent']);
-            document.getElementById("prevent_trigger_words").value = s;
-        }
-    
-    var control_checkBox = document.getElementById("control");
-    var control_dropDown = document.getElementById("argument-control");
-    var selectedArg = control_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    index = events_words["control"].indexOf(triggerword_arg_token_qsn);
-    if (control_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "control (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["control"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['control']);
-            document.getElementById("control_trigger_words").value = s;
-        }
-        
-    }
-    else if (index > -1) 
-        {    
-            events_words["control"].splice(index, 1); 
-            s = list_to_string(events_words['control']);
-            document.getElementById("control_trigger_words").value = s;
-        }
-    
-    
-    
-    var cure_checkBox = document.getElementById("cure");
-    var cure_dropDown = document.getElementById("argument-cure");
-    var selectedArg = cure_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    index = events_words["cure"].indexOf(triggerword_arg_token_qsn);
-    if (cure_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "cure (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["cure"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['cure']);
-            document.getElementById("cure_trigger_words").value = s;
-        }
-    }
-    else if (index > -1) 
-        {    
-            events_words["cure"].splice(index, 1); 
-            s = list_to_string(events_words['cure']);
-            document.getElementById("cure_trigger_words").value = s;
-        }
-    
-    var death_checkBox = document.getElementById("death");
-    var death_dropDown = document.getElementById("argument-death");
-    var selectedArg = death_dropDown.value;
-
-    // add argument to triggerword token qsn
-    idx = triggerword_token_qsn.indexOf("_");
-    triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn;
-
-    index = events_words["death"].indexOf(triggerword_arg_token_qsn);
-    if (death_checkBox.checked == true){
-        if(events != "")
-            events+=", ";
-        events += "death (" + selectedArg + ")";
-        if(index==-1)
-        {
-            events_words["death"].push(triggerword_arg_token_qsn);
-            s = list_to_string(events_words['death']);
-            document.getElementById("death_trigger_words").value = s;
-        }
-    }
-    else if (index > -1) 
-        {    
-            events_words["death"].splice(index, 1); 
-            s = list_to_string(events_words['death']);
-            document.getElementById("death_trigger_words").value = s;
-        }
 
     var flag_checkBox = document.getElementById("flagg");
     index = events_words["flag"].indexOf(triggerword_token_qsn);
@@ -1266,8 +1109,8 @@ Some more rare case examples of triggering word:
          <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
          <br>
 
-         <div id="argument-infect-div">
-             <select name="argument-infect" id="argument-infect" style="display: none;" onChange="updateOtherDropdowns(0)" required>
+         <div id="argument-infect-div" style="display: none;" >
+             <select name="argument-infect" id="argument-infect" onChange="updateOtherDropdowns(0)" required>
                 <option id="argument-infect-trigger" value="trigger">Trigger</option>
                 <option id="argument-infect-person" value="person">Person</option>
                 <option id="argument-infect-intruder" value="intruder">Intruder</option>
@@ -1279,8 +1122,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-infect-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-spread-div">
-             <select name="argument-spread" id="argument-spread" style="display: none;" onChange="updateOtherDropdowns(1)" required>
+         <div id="argument-spread-div" style="display: none;" >
+             <select name="argument-spread" id="argument-spread" onChange="updateOtherDropdowns(1)" required>
                 <option id="argument-spread-trigger" value="trigger">Trigger</option>
                 <option id="argument-spread-disease" value="disease">Disease</option>
                 <option id="argument-spread-place" value="place">Place</option>
@@ -1291,8 +1134,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-spread-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-symptom-div">
-             <select name="argument-symptom" id="argument-symptom" style="display: none;" onChange="updateOtherDropdowns(2)" required>
+         <div id="argument-symptom-div" style="display: none;">
+             <select name="argument-symptom" id="argument-symptom" onChange="updateOtherDropdowns(2)" required>
                 <option id="argument-symptom-trigger" value="trigger">Trigger</option>
                 <option id="argument-symptom-person" value="person">Person</option>
                 <option id="argument-symptom-symptom" value="symptom">Symptom</option>
@@ -1305,8 +1148,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-symptom-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-prevent-div">
-             <select name="argument-prevent" id="argument-prevent" style="display: none;" onChange="updateOtherDropdowns(3)" required>
+         <div id="argument-prevent-div" style="display: none;">
+             <select name="argument-prevent" id="argument-prevent" onChange="updateOtherDropdowns(3)" required>
                 <option id="argument-prevent-trigger" value="trigger">Trigger</option>
                 <option id="argument-prevent-person" value="person">Person</option>
                 <option id="argument-prevent-intruder" value="intruder">Intruder</option>
@@ -1319,8 +1162,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-prevent-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-control-div">
-             <select name="argument-control" id="argument-control" style="display: none;" onChange="updateOtherDropdowns(4)" required>
+         <div id="argument-control-div" style="display: none;">
+             <select name="argument-control" id="argument-control" onChange="updateOtherDropdowns(4)" required>
                 <option id="argument-control-trigger" value="trigger">Trigger</option>
                 <option id="argument-control-agent" value="agent">Agent</option>
                 <option id="argument-control-disease" value="disease">Disease</option>
@@ -1333,8 +1176,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-control-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-cure-div">
-             <select name="argument-cure" id="argument-cure" style="display: none;" onChange="updateOtherDropdowns(5)" required>
+         <div id="argument-cure-div" style="display: none;">
+             <select name="argument-cure" id="argument-cure" onChange="updateOtherDropdowns(5)" required>
                 <option id="argument-cure-trigger" value="trigger">Trigger</option>
                 <option id="argument-cure-person" value="person">Person</option>
                 <option id="argument-cure-disease" value="disease">Disease</option>
@@ -1347,8 +1190,8 @@ Some more rare case examples of triggering word:
              <input type="text" id="argument-cure-input" style="display: none;"></input>
          </div>
 
-         <div id="argument-death-div">
-             <select name="argument-death" id="argument-death" style="display: none;" onChange="updateOtherDropdowns(6)" required>
+         <div id="argument-death-div" style="display: none;">
+             <select name="argument-death" id="argument-death" onChange="updateOtherDropdowns(6)" required>
                 <option id="argument-death-trigger" value="trigger">Trigger</option>
                 <option id="argument-death-person" value="person">Person</option>
                 <option id="argument-death-disease" value="disease">Disease</option>
