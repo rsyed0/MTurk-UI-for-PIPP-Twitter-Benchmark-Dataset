@@ -11,6 +11,7 @@ let highlighted_words = new Set();
 let question_number = 1;
 let userSelection = "";
 let trigger_word = "";
+let trigger_range = "";
 let word_num = "";
 let triggerword_token_qsn = "";
 let events_words = {
@@ -239,7 +240,8 @@ function select(e) {
         return;
     }
     trigger_word = selected;
-    console.log(trigger_word);
+    trigger_range = '('+startNodeIndex/2+'-'+endNodeIndex/2+')';
+    triggerword_token_qsn = selected + '_' + ids[question_number-1];
            
     document.getElementById("infect").checked = false;
     document.getElementById("spread").checked = false;
@@ -250,7 +252,7 @@ function select(e) {
     document.getElementById("death").checked = false;
     document.getElementById("flagg").checked = false;
      
-    document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '"';
+    document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '" '+trigger_range;
  
     var menu = document.getElementById("contextMenu")
     menu.style.display = 'block';
@@ -557,12 +559,12 @@ function events_selected()
 
     if(elem)
     {
-        elem.innerHTML =  ' <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button>';
+        elem.innerHTML =  ' <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button>';
     }
     else
     {
         document.getElementById("trigger_words").innerHTML +=
-        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ triggerword_token_qsn + '"> <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
+        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ triggerword_token_qsn + '"> <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
     } 
   
 
