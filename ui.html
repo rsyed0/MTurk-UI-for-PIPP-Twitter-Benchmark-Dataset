@@ -279,6 +279,7 @@ function dragText(e) {
         
         word_num = String(userSelection).substring(_index+1);
         triggerword_token_qsn = String(userSelection) + '_' + ids[question_number-1]; //String(question_number);
+        console.log(triggerword_token_qsn);
     }
     else
     {
@@ -378,6 +379,7 @@ function edit_events(id)
     let _index = id.indexOf('_');
     let extracted_tiggerword_token_qsn = id.substring(_index+1);
     trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
+    console.log(trigger_word);
     document.getElementById("trigger_word_content").innerHTML = 'Editing the events that are triggered by "' + trigger_word + '"';
  
     var menu = document.getElementById("contextMenu")
@@ -1121,7 +1123,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-infect-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-infect-input" style="display: none;"></input>
+             <input type="text" name="argument-infect-input" id="argument-infect-input" style="display: none;"></input>
          </div>
 
          <div id="argument-spread-div" style="display: none;" >
@@ -1133,7 +1135,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-spread-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-spread-input" style="display: none;"></input>
+             <input type="text" name="argument-spread-input" id="argument-spread-input" style="display: none;"></input>
          </div>
 
          <div id="argument-symptom-div" style="display: none;">
@@ -1147,7 +1149,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-symptom-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-symptom-input" style="display: none;"></input>
+             <input type="text" name="argument-symptom-input" id="argument-symptom-input" style="display: none;"></input>
          </div>
 
          <div id="argument-prevent-div" style="display: none;">
@@ -1161,7 +1163,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-prevent-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-prevent-input" style="display: none;"></input>
+             <input type="text" name="argument-prevent-input" id="argument-prevent-input" style="display: none;"></input>
          </div>
 
          <div id="argument-control-div" style="display: none;">
@@ -1175,7 +1177,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-control-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-control-input" style="display: none;"></input>
+             <input type="text" name="argument-control-input" id="argument-control-input" style="display: none;"></input>
          </div>
 
          <div id="argument-cure-div" style="display: none;">
@@ -1189,7 +1191,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-cure-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-cure-input" style="display: none;"></input>
+             <input type="text" name="argument-cure-input" id="argument-cure-input" style="display: none;"></input>
          </div>
 
          <div id="argument-death-div" style="display: none;">
@@ -1202,7 +1204,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-death-other" value="other">Other</option>
              </select>
 
-             <input type="text" id="argument-death-input" style="display: none;"></input>
+             <input type="text" name="argument-death-input" id="argument-death-input" style="display: none;"></input>
          </div>
          
          <br>
