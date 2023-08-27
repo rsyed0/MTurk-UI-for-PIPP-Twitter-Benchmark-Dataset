@@ -241,7 +241,7 @@ function select(e) {
     }
     trigger_word = selected;
     trigger_range = '('+startNodeIndex/2+'-'+endNodeIndex/2+')';
-    triggerword_token_qsn = selected + '_' + ids[question_number-1];
+    triggerword_token_qsn = selected + '_' + startNodeIndex/2 + '-' + endNodeIndex/2 + '_' + ids[question_number-1];
            
     document.getElementById("infect").checked = false;
     document.getElementById("spread").checked = false;
@@ -251,6 +251,13 @@ function select(e) {
     document.getElementById("cure").checked = false;
     document.getElementById("death").checked = false;
     document.getElementById("flagg").checked = false;
+
+    // make all divs invisible
+    const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+
+    for (let i=0;i<7;i++) {
+        document.getElementById("argument-" + eventTypes[i] + "-div").style.display = "none";
+    }
      
     document.getElementById("trigger_word_content").innerHTML = 'select the events that are triggered by "' + trigger_word + '" '+trigger_range;
  
@@ -266,6 +273,7 @@ function dragText(e) {
     document.getElementById('input').value = t;
     
     userSelection = window.getSelection().getRangeAt(0);
+    console.log(String(userSelection));
     let _index = String(userSelection).lastIndexOf("_");
     if(_index>0)
     {
@@ -378,7 +386,12 @@ function edit_events(id)
 
     let _index = id.indexOf('_');
     let extracted_tiggerword_token_qsn = id.substring(_index+1);
-    trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
+    let info = split_ttq(extracted_tiggerword_token_qsn);
+
+    trigger_word = info["words"];
+    trigger_range = "(" + info["range"] + ")";
+
+    //trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
     console.log(trigger_word);
     document.getElementById("trigger_word_content").innerHTML = 'Editing the events that are triggered by "' + trigger_word + '"';
  
@@ -573,6 +586,25 @@ function events_selected()
     
 }
 
+function split_ttq(ttq)
+{
+    let tkns = ttq.split("_");
+    let words = tkns[0];
+    let index_tkns = tkns[1].split("-");
+    let start_index = parseFloat(index_tkns[0]);
+    let end_index = parseFloat(index_tkns[1]);
+    let tweet_id = tkns[2];
+
+    let output = {};
+    output["words"] = words;
+    output["start"] = start_index;
+    output["end"] = end_index;
+    output["range"] = tkns[1];
+    output["tweet"] = tweet_id;
+
+    return output;
+}
+
 function getInfo(word_token_num, ch)
 {
     let _index = word_token_num.lastIndexOf("_");
@@ -605,6 +637,7 @@ function getInfo(word_token_num, ch)
 
 function populateSelectedItems()
 {
+    console.log(highlighted_words);
     document.getElementById("trigger_words").innerHTML = "";
     for(let item of highlighted_words.values())
     {
@@ -612,58 +645,31 @@ function populateSelectedItems()
         if(String(qsn) == String(question_number))
         {
             
-            let word = getInfo(item, 'w');
+            let output = split_ttq(item);
+            let word = output["words"];
+            let range = output["range"];
             let events = "";
-            
-            let index = events_words["infect"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "infect";
+
+            const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
+            for (let i=0;i<7;i++) {
+                let eventType = eventTypes[i];
+
+                for (let j=0;j<events_words[eventType].length;j++) {
+
+                    let event_desc = events_words[eventType][j];
+                    if (event_desc.includes(item)) {
+                        let index = event_desc.indexOf("_");
+                        let argType = event_desc.substring(0, index);
+
+                        events += eventType + " (" + argType + "), ";
+                    }
+                }
             }
-            index = events_words["spread"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "spread";
+
+            if (events.length > 0) {
+                events = events.substring(0, events.length-2);
             }
-            index = events_words["symptom"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "symptom";
-            }
-            index = events_words["prevent"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "prevent";
-            }
-            index = events_words["control"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "control";
-            }
-            index = events_words["cure"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "cure";
-            }           
-            index = events_words["death"].indexOf(item);
-            if(index > -1)
-            {
-                if(events != "")
-                    events+=", ";
-                events += "death";
-            }
+
             index = events_words["flag"].indexOf(item);
             if(index > -1)
             {
@@ -673,7 +679,7 @@ function populateSelectedItems()
             }     
 
             document.getElementById("trigger_words").innerHTML +=
-        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ item + '"> <span id="selection_' + item + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + word + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + item + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + item + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
+        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ item + '"> <span id="selection_' + item + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + word + ' (' + range + ') </span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + item + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + item + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
  
         }
         
