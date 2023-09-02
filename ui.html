@@ -438,7 +438,21 @@ function edit_events(id)
     }
 
     let index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
-    document.getElementById("flagg").checked = (index > -1);
+    //document.getElementById("flagg").checked = (index > -1);
+    for (let j=0;j<events_words[eventTypes[i]].length;j++) {
+        let event_desc = events_words[eventTypes[i]][j];
+        if (event_desc.includes(extracted_tiggerword_token_qsn)) {
+            contains_ettq = true;
+
+            let event_arg = event_desc.substring(0,event_desc.indexOf("_"));
+            document.getElementById("argument-flag-input").value = event_arg;
+
+            break;
+        }
+    }
+    document.getElementById("flagg").checked = contains_ettq;
+    document.getElementById("argument-flag-div").style.display = contains_ettq ? "inline" : "none";
+
 
     // TODO load argument(s) from events arrays
 
@@ -466,6 +480,12 @@ function updateDropdowns(sender) {
         } else {
             document.getElementById("argument-" + eventTypes[i] + "-div").style.display = document.getElementById(eventTypes[i]).checked ? "inline" : "none";
         }
+    }
+
+    if (sender == 7) {
+        document.getElementById("argument-flag-div").style.display = document.getElementById("flagg").checked ? "none" : "inline";
+    } else {
+        document.getElementById("argument-flag-div").style.display = document.getElementById("flagg").checked ? "inline" : "none";
     }
 
 }
@@ -540,8 +560,41 @@ function events_selected()
 
     }
 
-    var flag_checkBox = document.getElementById("flagg");
-    index = events_words["flag"].indexOf(triggerword_token_qsn);
+    var checkBox = document.getElementById("flagg");
+    var selectedArg = document.getElementById("argument-flag-input").value;
+
+    if (selectedArg === "") {
+        alert("Must submit a reason for flagging");
+        return;
+    }
+
+    console.log(selectedArg);
+
+    // add argument to triggerword token qsn
+    var triggerword_arg_token_qsn = selectedArg + "_" + triggerword_token_qsn; 
+    //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
+
+    index = events_words["flag"].indexOf(triggerword_arg_token_qsn);
+    if (checkBox.checked == true){
+        if(events != "")
+            events+=", ";
+        events += "flag (" + selectedArg + ")";
+        if(index==-1)
+        {
+            // creating event
+            events_words["flag"].push(triggerword_arg_token_qsn);
+            s = list_to_string(events_words["flag"]);
+            document.getElementById("flag_trigger_words").value = s;
+        }
+    }
+    else if (index > -1) 
+    {
+        // removing event
+        events_words["flag"].splice(index, 1);
+        s = list_to_string(events_words["flag"]);
+        document.getElementById("flag_trigger_words").value = s;
+    }
+    /*index = events_words["flag"].indexOf(triggerword_token_qsn);
     if (flag_checkBox.checked == true){
         if(events != "")
             events+=", ";
@@ -558,7 +611,7 @@ function events_selected()
             events_words["flag"].splice(index, 1); 
             s = list_to_string(events_words['flag']);
             document.getElementById("flag_trigger_words").value = s;
-        }
+        }*/
   
   hideMenu();
   elem = document.getElementById("p_" + triggerword_token_qsn);
@@ -1125,7 +1178,7 @@ Some more rare case examples of triggering word:
          <div id="death_event"> <crowd-checkbox type="checkbox" id="death" name="name" value="death" onclick="updateDropdowns(6)" > </crowd-checkbox> <label for="death"> death </label> </div>
          <br>
          <!-- Using flagg b/c flag ID is reserved -->
-         <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg"> <label for="flagg">flag</label> </div>
+         <div id="flag_event"> <crowd-checkbox type="checkbox" id="flagg" name="source" value="flagg" onclick="updateDropdowns(7)"> <label for="flagg">flag</label> </div>
          <br>
 
          <div id="argument-infect-div" style="display: none;" >
@@ -1250,6 +1303,11 @@ Some more rare case examples of triggering word:
              </select>
 
              <input type="text" name="argument-death-input" id="argument-death-input" style="display: none;"></input>
+         </div>
+
+         <div id="argument-flag-div" style="display: none;">
+            Flag Reason:<br>
+            <input type="text" name="argument-flag-input" id="argument-flag-input"></input>
          </div>
          
          <br>
