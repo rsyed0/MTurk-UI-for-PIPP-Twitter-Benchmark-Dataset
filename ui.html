@@ -24,7 +24,7 @@ let events_words = {
     "death" : [],
     "flag": []
 };
-let field_names = ['${text1 aaa bbb ccc}', '${text2}', '${text3}', '${text4}', '${text5}'];
+let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
 let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
 let current_table = "small";
 
@@ -1313,26 +1313,30 @@ Some more rare case examples of triggering word:
 
   <table id="arg_table" style="margin-right:20px;margin-left:150px;display:none">
         <thead><tr><th title="Field #1">Event</th>
-    <th title="Field #2">Infect</th>
-    <th title="Field #3">FIELD3</th>
-    <th title="Field #4">Notes</th>
+    <th title="Field #2">Argument</th>
+    <th title="Field #3">Infect</th>
+    <th title="Field #4">Example</th>
+    <th title="Field #5">Notes</th>
     </tr></thead>
     <tbody><tr>
     <td>Participant slots</td>
     <td> </td>
     <td> </td>
+    <td> </td>
     <td>if a time is presented, do we need to convert it from a subjective notion to an objective notion? eg. &quot;yesterday&quot; --&gt; 08/06/2023</td>
     </tr>
     <tr>
-    <td>Infected-Arg</td>
+    <td> </td>
+    <td>Infected</td>
     <td>The individual(s) being infected</td>
-    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
+    <td>Three dozen <b>workers</b> at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+    <td> </td>
+    <td>Disease</td>
     <td>The disease or virus that invaded the host</td>
-    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
+    <td>Three dozen workers at ( user ) have tested positive for <b>COVID</b> - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
@@ -1340,39 +1344,46 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+    <td> </td>
+    <td>Place</td>
     <td>The place that the individual(s) are infected</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+    <td> </td>
+    <td>Time</td>
     <td>The time that the individual(s) are infected</td>
-    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
+    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of <b>May 15</b> . #( National Nurses Week url ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Manner-Arg</td>
+    <td> </td>
+    <td>Manner</td>
     <td>The means by which the disease infect a host</td>
-    <td>COVID - 19 spreads mainly among people who are in close contact ( within 6 feet ) for a PROLONGED period . Spread happens when an infected person coughs , sneezes , or talks &amp; amp ; droplets from their mouth or nose are launched into the air &amp; amp ; land in the mouths or noses of people nearby .</td>
+    <td>COVID - 19 spreads mainly among people who are in close contact ( within 6 feet ) for a PROLONGED period . Spread happens when an infected person coughs , sneezes , or talks &amp; amp ; droplets from their mouth or nose are launched into the <b>air</b> &amp; amp ; land in the mouths or noses of people nearby .</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Value-Arg</td>
+    <td> </td>
+    <td>Value</td>
     <td>The number of people being infected</td>
-    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
+    <td><b>Three dozen</b> workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Origin-Arg</td>
+    <td> </td>
+    <td>Origin</td>
     <td>The place from where the disease comes.</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+    <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to infection</td>
     <td> </td>
     <td> </td>
@@ -1385,6 +1396,7 @@ Some more rare case examples of triggering word:
     </tr>
     <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Spread</td>
     <td> </td>
     <td>Notes</td>
@@ -1393,18 +1405,21 @@ Some more rare case examples of triggering word:
     <td>Participant slots</td>
     <td> </td>
     <td> </td>
+    <td> </td>
     <td>In many cases, phrases like &quot;the pandemic is spreading&quot; does not appear with other info regarding place and time or even the name of the disease; do we consider to utilize the published time of the tweet?<br/><br/>Also there are cases with only one explicit trigger word but several arguments, do we only consider the segment with explicit trigger words? </td>
     </tr>
     <tr>
-    <td>Population-Arg</td>
+        <td> </td>
+    <td>Population</td>
     <td>The population among which the disease spreads</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+        <td> </td>
+    <td>Disease</td>
     <td>The disease/virus/pandemic that is prevailing</td>
-    <td>Right now , Britain doesnt have the ability to evenmonitor the spread of the virus , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
+    <td>Right now , Britain doesnt have the ability to evenmonitor the spread of the <b>virus</b> , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
     <td> </td>
     </tr>
     <tr>
@@ -1412,45 +1427,53 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+        <td> </td>
+    <td>Place</td>
     <td>The place at which the disease is spreading</td>
-    <td>Right now , Britain doesnt have the ability to evenmonitor the spread of the virus , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
+    <td>Right now , <b>Britain</b> doesnt have the ability to evenmonitor the spread of the virus , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Time</td>
     <td>The time during which the disease is spreading</td>
-    <td>According to Johns Hopkins University , 22k new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was 20k . And yesterday it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
+    <td>According to Johns Hopkins University , 22k new cases of Covid - 19 were diagnosed on <b>Tuesday , 5 / 12</b> . On <b>Wednesday</b> that number was 20k . And <b>yesterday</b> it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Manner-Arg</td>
+        <td> </td>
+    <td>Manner</td>
     <td>The means by which a disease spread</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Value-Arg</td>
+        <td> </td>
+    <td>Value</td>
     <td>The number of people being infected</td>
-    <td>According to Johns Hopkins University , 22k new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was 20k . And yesterday it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
+    <td>According to Johns Hopkins University , <b>22k</b> new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was <b>20k</b> . And yesterday it was up to <b>28 , 000</b> . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Origin-Arg</td>
+        <td> </td>
+    <td>Origin</td>
     <td>The place from where the disease comes.</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to the transmission of the disease</td>
-    <td>According to Johns Hopkins University , 22k new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was 20k . And yesterday it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
+    <td>According to <b>Johns Hopkins University</b> , 22k new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was 20k . And yesterday it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Trend-argument</td>
+        <td> </td>
+    <td>Trend</td>
     <td>The possible change of a transmission of a disease</td>
     <td> </td>
     <td> </td>
@@ -1463,6 +1486,7 @@ Some more rare case examples of triggering word:
     </tr>
     <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Symoptom</td>
     <td> </td>
     <td>Notes</td>
@@ -1471,18 +1495,21 @@ Some more rare case examples of triggering word:
     <td>Participant slots</td>
     <td> </td>
     <td> </td>
+    <td> </td>
     <td>I sometimes see &quot;severity&quot; of an symptom as an argument, but I think it can be merged into the symptom argument.<br/><br/>There might be a challenging attributing arguments to the correct events, like time and place of event symptom and infect, since they frequently apprear together<br/></td>
     </tr>
     <tr>
-    <td>Person-Arg</td>
+        <td> </td>
+    <td>Person</td>
     <td>The individual(s) displaying symptoms</td>
-    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
+    <td>( user ) ( user ) Well , no , since <b>I</b> had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Sympyom-Arg</td>
+        <td> </td>
+    <td>Sympyom</td>
     <td>The concrete symptom(s) that are displayed</td>
-    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
+    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the <b>mildest cough</b> in the world - then a pick and mix of the others ( in particular the <b>loss of taste</b> and <b>tiredness</b> ).</td>
     <td> </td>
     </tr>
     <tr>
@@ -1490,45 +1517,46 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
-    </tr>
-    <tr>
-    <td>Disease-Arg</td>
-    <td>The disease(s) that are potentially causing the symptoms</td>
-    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+        <td> </td>
+    <td>Disease</td>
+    <td>The disease(s) that are potentially causing the symptoms</td>
+    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * <b>covid - 19</b> , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
+    <td> </td>
+    </tr>
+    <tr>
+        <td> </td>
+    <td>Place</td>
     <td>The place at which the symptom(s) are displayed</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Time</td>
     <td>The time during which the symptom(s) are displayed</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Duration-Arg</td>
+        <td> </td>
+    <td>Duration</td>
     <td>The time interval that the symptom(s) last</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to symptoms of the disease</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Prevent</td>
     <td> </td>
     <td>Notes</td>
@@ -1538,23 +1566,27 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Agent-Arg</td>
+        <td> </td>
+    <td>Agent</td>
     <td>The individual(s) attempting to avoid infections </td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
+    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . <b>You</b> are protecting yourself and others .</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+        <td> </td>
+    <td>Disease</td>
     <td>The disease/virus/illness being defensed against</td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
+    <td>( user ) As of today , I know of two people I knew who died from the <b>Coronavirus</b> . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Means-Arg</td>
+        <td> </td>
+    <td>Means</td>
     <td>actions/means that may prevent infection</td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
+    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to <b>wear a mask</b> . You are protecting yourself and others .</td>
     <td> </td>
     </tr>
     <tr>
@@ -1562,51 +1594,53 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+        <td> </td>
+    <td>Place</td>
     <td>The place at which the prevention takes place</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Time</td>
     <td>The time at which the prevention takes place</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to the prevention of this disease</td>
-    <td>Online health gurus say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is lacking . ( url )</td>
+    <td><b>Online health gurus</b> say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is lacking . ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Target-Arg</td>
+        <td> </td>
+    <td>Target</td>
     <td>The individual(s)/population to which the agent attempts to prevent the disease transmission</td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
+    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting <b>yourself and others</b> .</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Effectiveness-Arg</td>
+        <td> </td>
+    <td>Effectiveness</td>
     <td>How effective is the means against the disease</td>
-    <td>Online health gurus say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is lacking . ( url )</td>
+    <td>Online health gurus say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is <b>lacking</b> . ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Impact-Arg</td>
+        <td> </td>
+    <td>Impact</td>
     <td>The physical/emotional impact caused by prevention measures</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Control</td>
     <td> </td>
     <td>Notes</td>
@@ -1616,23 +1650,27 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
-    </tr>
-    <tr>
-    <td>Authority-Arg</td>
-    <td>The authoritity implementing/advocating the control of a panedmic</td>
-    <td>Maybe the gov &#39; t lockdown was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+        <td> </td>
+    <td>Authority</td>
+    <td>The authoritity implementing/advocating the control of a panedmic</td>
+    <td>Maybe the <b>gov &#39; t</b> lockdown was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
+    <td> </td>
+    </tr>
+    <tr>
+        <td> </td>
+    <td>Disease</td>
     <td>The intruding disease being defensed against</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Means-Arg</td>
+        <td> </td>
+    <td>Means</td>
     <td>the enacted/adcovated policies/actions that may control the pandemic</td>
-    <td>Maybe the gov &#39; t lockdown was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
+    <td>Maybe the gov &#39; t <b>lockdown</b> was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
     <td> </td>
     </tr>
     <tr>
@@ -1640,57 +1678,60 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
-    </tr>
-    <tr>
-    <td>Place-Arg</td>
-    <td>The place at which the control takes place</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . Taiwan , Hong Kong , New Zealand , Austria have already shown you its effectiveness . ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Place</td>
+    <td>The place at which the control takes place</td>
+    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . <b>Taiwan , Hong Kong , New Zealand , Austria</b> have already shown you its effectiveness . ( url )</td>
+    <td> </td>
+    </tr>
+    <tr>
+        <td> </td>
+    <td>Time</td>
     <td>The time at which the control takes place</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Origin-Arg</td>
+        <td> </td>
+    <td>Origin</td>
     <td>The place from where the disease comes.</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to the control of this disease</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Target-Arg</td>
+        <td> </td>
+    <td>Target</td>
     <td>The individual(s)/population among which the agent attempts to impede the disease transmission</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . Taiwan , Hong Kong , New Zealand , Austria have already shown you its effectiveness . ( url )</td>
+    <td>( user ) Make wearing masks mandatory , please . It can save a lot of <b>people</b> . Taiwan , Hong Kong , New Zealand , Austria have already shown you its effectiveness . ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Effectiveness-Arg</td>
+        <td> </td>
+    <td>Effectiveness</td>
     <td>How effective is the means against the disease</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . Taiwan , Hong Kong , New Zealand , Austria have already shown you its effectiveness . ( url )</td>
+    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . Taiwan , Hong Kong , New Zealand , Austria have already shown you its <b>effectiveness</b> . ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Impact-Arg</td>
+        <td> </td>
+    <td>Impact</td>
     <td>The physical/emotional/social impact caused by control policies</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Cure</td>
     <td> </td>
     <td>Notes</td>
@@ -1699,24 +1740,28 @@ Some more rare case examples of triggering word:
     <td>Participant slots</td>
     <td> </td>
     <td> </td>
+    <td> </td>
     <td>We don&#39;t count cures that is completely not effective as triggering event Cure </td>
     </tr>
     <tr>
-    <td>Cured-Arg</td>
+        <td> </td>
+    <td>Cured</td>
     <td>The individuals(s) recovered/recieving the treatments</td>
-    <td>( user ) from ( user ) says that while most patients recover from COVID - 19 in about a week , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
+    <td>( user ) from ( user ) says that while most <b>patients</b> recover from COVID - 19 in <b>about a week</b> , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+        <td> </td>
+    <td>Disease</td>
     <td>The disease/illness that the patients get rid of</td>
-    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in PubMed ! ( user ) ( user ) ( url )</td>
+    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against <b>COVID - 19</b> reported in PubMed ! ( user ) ( user ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Means-Arg</td>
+        <td> </td>
+    <td>Means</td>
     <td>The therapy that (potentialy) treat the disease</td>
-    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in PubMed ! ( user ) ( user ) ( url )</td>
+    <td>Repurposing <b>drugs</b> to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in PubMed ! ( user ) ( user ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
@@ -1724,57 +1769,60 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+        <td> </td>
+    <td>Place</td>
     <td>The place at which the recovery takes place</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Time</td>
     <td>The time at which the recovery takes place</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Value-Arg</td>
+        <td> </td>
+    <td>Value</td>
     <td>The number of people being cured</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Facility-Arg</td>
+        <td> </td>
+    <td>Facility</td>
     <td>The individual(s)/organization(s) utilizing/inventing certain means to facilitate recoveries</td>
     <td> </td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to the cure/recovery of this disease</td>
-    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in PubMed ! ( user ) ( user ) ( url )</td>
+    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in <b>PubMed</b> ! ( user ) ( user ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Effectiveness-Arg</td>
+        <td> </td>
+    <td>Effectiveness</td>
     <td>How effective is the means against the disease</td>
-    <td>This Recently developed Anti - body could very well be the answer to Ending this CoronaVirus . Shown to be 100 % effective so far ( url )</td>
+    <td>This Recently developed Anti - body could very well be the answer to Ending this CoronaVirus . Shown to be <b>100 % effective</b> so far ( url )</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Duration-Arg</td>
+        <td> </td>
+    <td>Duration</td>
     <td>The time interval that the treatment takes</td>
-    <td>( user ) from ( user ) says that while most patients recover from COVID - 19 in about a week , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td> </td>
-    <td> </td>
+    <td>( user ) from ( user ) says that while most patients recover from COVID - 19 in <b>about a week</b> , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
     <td> </td>
     </tr>
     <tr>
     <td>Event</td>
+    <td>Argument</td>
     <td>Death</td>
     <td> </td>
     <td>Notes</td>
@@ -1783,18 +1831,21 @@ Some more rare case examples of triggering word:
     <td>Participant slots</td>
     <td> </td>
     <td> </td>
+    <td> </td>
     <td>The trend may be manifested via change of numbers instead of a trigger</td>
     </tr>
     <tr>
-    <td>Dead-Arg</td>
+        <td> </td>
+    <td>Dead</td>
     <td>The individuals(s) who die of infectious disease</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Disease-Arg</td>
+        <td> </td>
+    <td>Disease</td>
     <td>The disease that (potentially) causes the death</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
+    <td>( url ) on pace to pass 100 , 000 <b>Covid - 19</b> deaths by June 1 , CDC director says - POLITICO ( url</td>
     <td> </td>
     </tr>
     <tr>
@@ -1802,39 +1853,46 @@ Some more rare case examples of triggering word:
     <td> </td>
     <td> </td>
     <td> </td>
+    <td> </td>
     </tr>
     <tr>
-    <td>Place-Arg</td>
+        <td> </td>
+    <td>Place</td>
     <td>The place at which the death takes place</td>
     <td>-</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Time-Arg</td>
+        <td> </td>
+    <td>Time</td>
     <td>The time at which the death takes place</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
+    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by <b>June 1</b> , CDC director says - POLITICO ( url</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Value-Arg</td>
+        <td> </td>
+    <td>Value</td>
     <td>The number of death</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
+    <td>( url ) on pace to pass <b>100 , 000</b> Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Information-source-Arg</td>
+        <td> </td>
+    <td>Information-source</td>
     <td>The source that is providing this information regarding to fatality of this disease</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
+    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , <b>CDC director</b>  says - POLITICO ( url</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Trend-Arg</td>
+        <td> </td>
+    <td>Trend</td>
     <td>The trend of death counts caused by disease infection</td>
-    <td>( user ) ( user ) Well we know for sure exactly how many have died from covid . We have no clue how many have survived it . So doing some quick math here ... the death rate can only go down . Its a mathematical certainty . Soooo definitely deceptive numbers to increase fear .</td>
+    <td>( user ) ( user ) Well we know for sure exactly how many have died from covid . We have no clue how many have survived it . So doing some quick math here ... the death rate can only <b>go down</b> . Its a mathematical certainty . Soooo definitely deceptive numbers to increase fear .</td>
     <td> </td>
     </tr>
     <tr>
-    <td>Impact-Arg</td>
+        <td> </td>
+    <td>Impact</td>
     <td>The physical/emotional impact caused by disease fatalities</td>
     <td> </td>
     <td> </td>
