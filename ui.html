@@ -578,7 +578,7 @@ function events_selected()
     var checkBox = document.getElementById("flagg");
     var selectedArg = document.getElementById("argument-flag-input").value;
 
-    if (selectedArg === "") {
+    if (selectedArg === "" && checkBox.checked) {
         alert("Must submit a reason for flagging");
         return;
     }
@@ -917,7 +917,7 @@ function toggle_table(direction)
       
       </p>
       
-        <p> In order to annotate, first double click on a word that you think is a potential trigger word for any of the 7 events. Then you would have to choose which event is being triggered by that word. You also have the option to delete an already chosen trigger word or edit the events triggered by it
+        <p> In order to annotate, first click once on a word that you think is a potential argument for the described event. Then you would have to choose which event is being triggered by that word. You also have the option to delete an already chosen trigger word or edit the events triggered by it
       </p>
         <p> <ul>Important Notes:  
             <li> There can be sentences without any events. No need to annotate anything for such sentences. </li>
@@ -1201,6 +1201,7 @@ Some more rare case examples of triggering word:
          <br>
 
          <div id="argument-infect-div" style="display: none;" >
+             <p>Infect:</p>
              <select name="argument-infect" id="argument-infect" onChange="updateOtherDropdowns(0)" required>
                 <option id="argument-infect-trigger" value="trigger">Trigger</option>
                 <option id="argument-infect-infected" value="infected">Infected</option>
@@ -1218,6 +1219,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-spread-div" style="display: none;" >
+             <p>Spread:</p>
              <select name="argument-spread" id="argument-spread" onChange="updateOtherDropdowns(1)" required>
                 <option id="argument-spread-trigger" value="trigger">Trigger</option>
                 <option id="argument-spread-population" value="population">Population</option>
@@ -1236,6 +1238,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-symptom-div" style="display: none;">
+             <p>Symptom:</p>
              <select name="argument-symptom" id="argument-symptom" onChange="updateOtherDropdowns(2)" required>
                 <option id="argument-symptom-trigger" value="trigger">Trigger</option>
                 <option id="argument-symptom-person" value="person">Person</option>
@@ -1252,6 +1255,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-prevent-div" style="display: none;">
+             <p>Prevent:</p>
              <select name="argument-prevent" id="argument-prevent" onChange="updateOtherDropdowns(3)" required>
                 <option id="argument-prevent-trigger" value="trigger">Trigger</option>
                 <option id="argument-prevent-agent" value="agent">Agent</option>
@@ -1270,6 +1274,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-control-div" style="display: none;">
+             <p>Control:</p>
              <select name="argument-control" id="argument-control" onChange="updateOtherDropdowns(4)" required>
                 <option id="argument-control-trigger" value="trigger">Trigger</option>
                 <option id="argument-control-authority" value="authority">Authority</option>
@@ -1290,6 +1295,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-cure-div" style="display: none;">
+             <p>Cure:</p>
              <select name="argument-cure" id="argument-cure" onChange="updateOtherDropdowns(5)" required>
                 <option id="argument-cure-trigger" value="trigger">Trigger</option>
                 <option id="argument-cure-cured" value="cured">Cured</option>
@@ -1309,6 +1315,7 @@ Some more rare case examples of triggering word:
          </div>
 
          <div id="argument-death-div" style="display: none;">
+             <p>Death:</p>
              <select name="argument-death" id="argument-death" onChange="updateOtherDropdowns(6)" required>
                 <option id="argument-death-trigger" value="trigger">Trigger</option>
                 <option id="argument-death-dead" value="dead">Dead</option>
@@ -1339,7 +1346,7 @@ Some more rare case examples of triggering word:
   
 
   <div>
-    <p style="padding-left:10px;color:#e31818;width:350px;">Double click and select the event trigger words present in the above text” to “In order to annotate, first double click on a word that you think is a potential trigger word for any of the 7 events. Then you would have to choose which event is being triggered by that word</p>
+    <p style="padding-left:10px;color:#e31818;width:350px;">Single click to select the event trigger words present in the above text” to “In order to annotate, first single click on a word that you think is a potential argument for the described event. Then you would have to choose which event is being triggered by that word</p>
     
     <p style="padding-left:10px;color:#2c18e3;width:350px;">Trigger words and Events:</p>
     
