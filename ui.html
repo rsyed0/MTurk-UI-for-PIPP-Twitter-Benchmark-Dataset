@@ -26,6 +26,9 @@ let events_words = {
 };
 let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
 let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
+let event_names = ['${name1}', '${name2}', '${name3}', '${name4}', '${name5}'];
+let event_triggers = ['${trigger1}', '${trigger2}', '${trigger3}', '${trigger4}', '${trigger5}'];
+let event_trigger_ids = ['${triggerid1}', '${triggerid2}', '${triggerid3}', '${triggerid4}', '${triggerid5}'];
 let current_table = "small";
 
 // let field_names = ["This is4 *a d->umm&y sen(ten 'ce, it ! is    just. an ex:ample?", 
@@ -42,9 +45,15 @@ window.onload = function() {
         ele.textContent = field_names[i-1];
         ele.setAttribute('id', 'question'+String(i));
         document.querySelector("#questions").appendChild(ele);
-}
+
+        let ele2 = document.createElement("H3");
+        ele2.textContent = "Event: " + event_names[i-1] + "<br>Trigger: " + event_triggers[i-1] + "_" + event_trigger_ids[i-1];
+        ele2.setAttribute('id', 'event'+String(i));
+        document.querySelector("#events").appendChild(ele2);
+  }
   
   document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+  document.getElementById("text_event").innerHTML = document.getElementById("event"+String(question_number)).innerHTML;
   originalText = document.getElementById("text_question").innerHTML;
 
   replace();
@@ -69,6 +78,9 @@ function isAlphanumeric(str) {
 
 function replace()
 {
+    let currEventName = event_names[question_number-1];
+    let currEventTrigger = event_triggers[question_number-1];
+    let currEventTriggerId = event_trigger_ids[question_number-1];
 
     let currText = field_names[question_number-1];
     let v=[];
@@ -122,7 +134,7 @@ function replace()
             // if(/\S/.test(w[i]))
             // {
             superscript = "_" + String(count);
-            if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number))) 
+            if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number)) || String(i+1) === currEventTriggerId) 
             {  
                 result = result + '<span style="background-color:#7FFF00">' + w[i] + superscript.sup() + '</span> ';
             }
@@ -142,7 +154,8 @@ function replace()
         i++;
     }
 
-document.getElementById("text_question").innerHTML = result;
+    document.getElementById("text_question").innerHTML = result;
+    document.getElementById("text_event").innerHTML = "Event: " + currEventName + "<br>Trigger: " + currEventTrigger + "_" + currEventTriggerId;
 
 }
 
@@ -151,6 +164,7 @@ function previous()
     hideMenu();
     question_number = question_number - 1;
     document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+    document.getElementById("text_event").innerHTML = document.getElementById("event"+String(question_number)).innerHTML;
     replace();
     populateSelectedItems();
     document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
@@ -170,6 +184,7 @@ function next()
     hideMenu();
     question_number = question_number + 1;
     document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
+    document.getElementById("text_event").innerHTML = document.getElementById("event"+String(question_number)).innerHTML;
     replace();
     populateSelectedItems();
     document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
@@ -1144,9 +1159,13 @@ Some more rare case examples of triggering word:
     <div>
     <p style="padding-left:10px;color:red;width:350px;"><b>Please read the instructions before attempting the task</b></p>
   </div>
+
+  <div id="events" style="display:none;">
+  </div>
   <div id="questions" style="display:none;">
   </div>
      <!--<p id="questions">-->
+     <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;" id="text_event"></p>
      <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;" id="text_question" onmouseup="select(event);"></p>
      <!--<p style="width:350px; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>-->
     <!--</p>-->
