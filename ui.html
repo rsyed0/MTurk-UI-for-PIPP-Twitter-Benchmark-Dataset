@@ -134,7 +134,7 @@ function replace()
             // if(/\S/.test(w[i]))
             // {
             superscript = "_" + String(count);
-            if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number)) || String(i+1) === currEventTriggerId) 
+            if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number)) || String(i) === currEventTriggerId) 
             {  
                 result = result + '<span style="background-color:#7FFF00">' + w[i] + superscript.sup() + '</span> ';
             }
@@ -1203,7 +1203,7 @@ Some more rare case examples of triggering word:
          <div id="argument-infect-div" style="display: none;" >
              <p>Infect:</p>
              <select name="argument-infect" id="argument-infect" onChange="updateOtherDropdowns(0)" required>
-                <option id="argument-infect-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-infect-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-infect-infected" value="infected">Infected</option>
                 <option id="argument-infect-disease" value="disease">Disease</option>
                 <option id="argument-infect-place" value="place">Place</option>
@@ -1221,7 +1221,7 @@ Some more rare case examples of triggering word:
          <div id="argument-spread-div" style="display: none;" >
              <p>Spread:</p>
              <select name="argument-spread" id="argument-spread" onChange="updateOtherDropdowns(1)" required>
-                <option id="argument-spread-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-spread-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-spread-population" value="population">Population</option>
                 <option id="argument-spread-disease" value="disease">Disease</option>
                 <option id="argument-spread-place" value="place">Place</option>
@@ -1240,7 +1240,7 @@ Some more rare case examples of triggering word:
          <div id="argument-symptom-div" style="display: none;">
              <p>Symptom:</p>
              <select name="argument-symptom" id="argument-symptom" onChange="updateOtherDropdowns(2)" required>
-                <option id="argument-symptom-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-symptom-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-symptom-person" value="person">Person</option>
                 <option id="argument-symptom-symptom" value="symptom">Symptom</option>
                 <option id="argument-symptom-disease" value="disease">Disease</option>
@@ -1257,7 +1257,7 @@ Some more rare case examples of triggering word:
          <div id="argument-prevent-div" style="display: none;">
              <p>Prevent:</p>
              <select name="argument-prevent" id="argument-prevent" onChange="updateOtherDropdowns(3)" required>
-                <option id="argument-prevent-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-prevent-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-prevent-agent" value="agent">Agent</option>
                 <option id="argument-prevent-disease" value="disease">Disease</option>
                 <option id="argument-prevent-means" value="means">Means</option>
@@ -1276,7 +1276,7 @@ Some more rare case examples of triggering word:
          <div id="argument-control-div" style="display: none;">
              <p>Control:</p>
              <select name="argument-control" id="argument-control" onChange="updateOtherDropdowns(4)" required>
-                <option id="argument-control-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-control-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-control-authority" value="authority">Authority</option>
                 <option id="argument-control-disease" value="disease">Disease</option>
                 <option id="argument-control-means" value="means">Means</option>
@@ -1297,7 +1297,7 @@ Some more rare case examples of triggering word:
          <div id="argument-cure-div" style="display: none;">
              <p>Cure:</p>
              <select name="argument-cure" id="argument-cure" onChange="updateOtherDropdowns(5)" required>
-                <option id="argument-cure-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-cure-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-cure-cured" value="cured">Cured</option>
                 <option id="argument-cure-disease" value="disease">Disease</option>
                 <option id="argument-cure-means" value="means">Means</option>
@@ -1317,7 +1317,7 @@ Some more rare case examples of triggering word:
          <div id="argument-death-div" style="display: none;">
              <p>Death:</p>
              <select name="argument-death" id="argument-death" onChange="updateOtherDropdowns(6)" required>
-                <option id="argument-death-trigger" value="trigger">Trigger</option>
+                <!--<option id="argument-death-trigger" value="trigger">Trigger</option>-->
                 <option id="argument-death-dead" value="dead">Dead</option>
                 <option id="argument-death-disease" value="disease">Disease</option>
                 <option id="argument-death-place" value="place">Place</option>
