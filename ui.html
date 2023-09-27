@@ -136,7 +136,8 @@ function replace()
             superscript = "_" + String(count);
             if(highlighted_words.has(w[i]+'_'+String(count)+'_'+String(question_number)) || String(i) === currEventTriggerId) 
             {  
-                result = result + '<span style="background-color:#7FFF00">' + w[i] + superscript.sup() + '</span> ';
+                console.log(w[i]);
+                result = result + '<span style="background-color:#7FFF00">' + w[i] + '</span> ';
             }
             else
             {    
@@ -757,7 +758,6 @@ function populateSelectedItems()
 const tables = ["small", "arg", "big"];
 const tt_to_ids = {"small": 0, "arg": 1, "big": 2};
 const table_descs = ["<u> Click here to view a simpler table</u>", "<u> Click here to view the arguments table</u>", "<u> Click here to view an exhaustive table</u>"];
-
 
 
 function toggle_table(direction)
