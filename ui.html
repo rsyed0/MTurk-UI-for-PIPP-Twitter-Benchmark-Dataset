@@ -73,7 +73,7 @@ function isAlphanumeric(str) {
   return str.match(/^[a-zA-Z0-9]+$/) !== null;
 }
 
-
+let lang = "jp";
 function replace()
 {
     let currEventName = event_names[question_number-1];
@@ -82,40 +82,51 @@ function replace()
     let v=[];
     let i=0;
     let curr_word = "";
-    while(i<=currText.length)
-    {
-        if(i==currText.length)
+
+    if (lang === "jp") {
+        while(i<currText.length)
         {
-            if(curr_word.length > 0)
-                v.push(curr_word);
-            break;
+            if(currText[i] != ' ')
+                v.push(currText[i]);
+            i++;
         }
-        if(isAlphanumeric(String(currText[i])))
+
+    } else {
+        while(i<=currText.length)
         {
-            if(curr_word.length > 0 && !isAlphanumeric(curr_word))
+            if(i==currText.length)
             {
-                v.push(curr_word);
-                curr_word = "";
+                if(curr_word.length > 0)
+                    v.push(curr_word);
+                break;
             }
-            curr_word = curr_word + currText[i];
-        }
-        else if(currText[i] == ' ')
-        {
-            if(curr_word.length > 0)
-            {   
-                 v.push(curr_word);
+            if(isAlphanumeric(String(currText[i])))
+            {
+                if(curr_word.length > 0 && !isAlphanumeric(curr_word))
+                {
+                    v.push(curr_word);
+                    curr_word = "";
+                }
+                curr_word = curr_word + currText[i];
             }
-                curr_word = "";
-        }
-        else {
-            if(curr_word.length > 0 && isAlphanumeric(curr_word))
-            {   
-                 v.push(curr_word);
-                 curr_word = "";
+            else if(currText[i] == ' ')
+            {
+                if(curr_word.length > 0)
+                {   
+                     v.push(curr_word);
+                }
+                    curr_word = "";
             }
-            curr_word = curr_word + currText[i];
+            else {
+                if(curr_word.length > 0 && isAlphanumeric(curr_word))
+                {   
+                     v.push(curr_word);
+                     curr_word = "";
+                }
+                curr_word = curr_word + currText[i];
+            }
+            i++;
         }
-        i++;
     }
     
     let result = "";
@@ -1199,7 +1210,7 @@ Some more rare case examples of triggering word:
          <div id="argument-infect-div" style="display: none;" >
              <p>Infect:</p>
              <select name="argument-infect" id="argument-infect" onChange="updateOtherDropdowns(0)" required>
-                <!--<option id="argument-infect-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-infect-trigger" value="trigger">Trigger</option>
                 <option id="argument-infect-infected" value="infected">Infected</option>
                 <option id="argument-infect-disease" value="disease">Disease</option>
                 <option id="argument-infect-place" value="place">Place</option>
@@ -1217,7 +1228,7 @@ Some more rare case examples of triggering word:
          <div id="argument-spread-div" style="display: none;" >
              <p>Spread:</p>
              <select name="argument-spread" id="argument-spread" onChange="updateOtherDropdowns(1)" required>
-                <!--<option id="argument-spread-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-spread-trigger" value="trigger">Trigger</option>
                 <option id="argument-spread-population" value="population">Population</option>
                 <option id="argument-spread-disease" value="disease">Disease</option>
                 <option id="argument-spread-place" value="place">Place</option>
@@ -1236,7 +1247,7 @@ Some more rare case examples of triggering word:
          <div id="argument-symptom-div" style="display: none;">
              <p>Symptom:</p>
              <select name="argument-symptom" id="argument-symptom" onChange="updateOtherDropdowns(2)" required>
-                <!--<option id="argument-symptom-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-symptom-trigger" value="trigger">Trigger</option>
                 <option id="argument-symptom-person" value="person">Person</option>
                 <option id="argument-symptom-symptom" value="symptom">Symptom</option>
                 <option id="argument-symptom-disease" value="disease">Disease</option>
@@ -1253,7 +1264,7 @@ Some more rare case examples of triggering word:
          <div id="argument-prevent-div" style="display: none;">
              <p>Prevent:</p>
              <select name="argument-prevent" id="argument-prevent" onChange="updateOtherDropdowns(3)" required>
-                <!--<option id="argument-prevent-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-prevent-trigger" value="trigger">Trigger</option>
                 <option id="argument-prevent-agent" value="agent">Agent</option>
                 <option id="argument-prevent-disease" value="disease">Disease</option>
                 <option id="argument-prevent-means" value="means">Means</option>
@@ -1272,7 +1283,7 @@ Some more rare case examples of triggering word:
          <div id="argument-control-div" style="display: none;">
              <p>Control:</p>
              <select name="argument-control" id="argument-control" onChange="updateOtherDropdowns(4)" required>
-                <!--<option id="argument-control-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-control-trigger" value="trigger">Trigger</option>
                 <option id="argument-control-authority" value="authority">Authority</option>
                 <option id="argument-control-disease" value="disease">Disease</option>
                 <option id="argument-control-means" value="means">Means</option>
@@ -1293,7 +1304,7 @@ Some more rare case examples of triggering word:
          <div id="argument-cure-div" style="display: none;">
              <p>Cure:</p>
              <select name="argument-cure" id="argument-cure" onChange="updateOtherDropdowns(5)" required>
-                <!--<option id="argument-cure-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-cure-trigger" value="trigger">Trigger</option>
                 <option id="argument-cure-cured" value="cured">Cured</option>
                 <option id="argument-cure-disease" value="disease">Disease</option>
                 <option id="argument-cure-means" value="means">Means</option>
@@ -1313,7 +1324,7 @@ Some more rare case examples of triggering word:
          <div id="argument-death-div" style="display: none;">
              <p>Death:</p>
              <select name="argument-death" id="argument-death" onChange="updateOtherDropdowns(6)" required>
-                <!--<option id="argument-death-trigger" value="trigger">Trigger</option>-->
+                <option id="argument-death-trigger" value="trigger">Trigger</option>
                 <option id="argument-death-dead" value="dead">Dead</option>
                 <option id="argument-death-disease" value="disease">Disease</option>
                 <option id="argument-death-place" value="place">Place</option>
