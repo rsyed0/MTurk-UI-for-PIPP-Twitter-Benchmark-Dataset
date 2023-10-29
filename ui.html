@@ -443,6 +443,7 @@ function edit_events(id)
                 console.log("argument-" + eventTypes[i] + "-" + event_arg);
 
                 document.getElementById("argument-" + eventTypes[i] + "-div").style.display = "inline";
+                populateTriggerWordDropdown(eventTypes[i]);
                 var selected_option = document.getElementById("argument-" + eventTypes[i] + "-" + event_arg);
                 if (selected_option === null) {
                     // other option was selected
@@ -491,6 +492,37 @@ function highlightRange() {
 
 }
 
+function getTriggerWords(eventType) {
+    // get each argument that has type "trigger"
+    const events = events_words[eventType];
+    var output = [];
+    events.forEach((event) => {
+        const tokens = event.split("_");
+        if (tokens[0] == "trigger"){
+            output.push(tokens[1]+"_"+tokens[2]);
+        }
+    });
+    return output;
+}
+
+function populateTriggerWordDropdown(eventType) {
+    const options = getTriggerWords(eventType);
+    console.log(eventType+" "+options);
+
+    const select = document.getElementById("argument-" + eventType + "-tw");
+
+    var i, L = select.options.length - 1;
+    for(i = L; i >= 0; i--) {
+        select.remove(i);
+    }
+
+    options.forEach((opt) => {
+        var option = document.createElement('option');
+        option.text = option.value = opt;
+        select.add(option, 0);
+    });
+}
+
 function updateDropdowns(sender) {
 
     console.log("reg " + sender);
@@ -503,6 +535,8 @@ function updateDropdowns(sender) {
         } else {
             document.getElementById("argument-" + eventTypes[i] + "-div").style.display = document.getElementById(eventTypes[i]).checked ? "inline" : "none";
         }
+
+        populateTriggerWordDropdown(eventTypes[i]);
     }
 
     if (sender == 7) {
@@ -522,7 +556,6 @@ function updateOtherDropdowns(i) {
     document.getElementById("argument-" + eventTypes[i] + "-input").style.display = (document.getElementById("argument-" + eventTypes[i]).value == "other") ? "inline" : "none";
 
 }
-
 
 function events_selected()
 {
@@ -1222,6 +1255,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-infect-other" value="other">Other</option>
              </select>
 
+             <select name="argument-infect-tw" id="argument-infect-tw" required> </select>
+
              <input type="text" name="argument-infect-input" id="argument-infect-input" style="display: none;"></input>
          </div>
 
@@ -1241,6 +1276,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-spread-other" value="other">Other</option>
              </select>
 
+             <select name="argument-spread-tw" id="argument-spread-tw" required> </select>
+
              <input type="text" name="argument-spread-input" id="argument-spread-input" style="display: none;"></input>
          </div>
 
@@ -1257,6 +1294,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-symptom-information" value="information">Information-source</option>
                 <option id="argument-symptom-other" value="other">Other</option>
              </select>
+
+             <select name="argument-symptom-tw" id="argument-symptom-tw" required> </select>
 
              <input type="text" name="argument-symptom-input" id="argument-symptom-input" style="display: none;"></input>
          </div>
@@ -1276,6 +1315,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-prevent-impact" value="impact">Impact</option>
                 <option id="argument-prevent-other" value="other">Other</option>
              </select>
+
+             <select name="argument-prevent-tw" id="argument-prevent-tw" required> </select>
 
              <input type="text" name="argument-prevent-input" id="argument-prevent-input" style="display: none;"></input>
          </div>
@@ -1298,6 +1339,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-control-other" value="other">Other</option>
              </select>
 
+             <select name="argument-control-tw" id="argument-control-tw" required> </select>
+
              <input type="text" name="argument-control-input" id="argument-control-input" style="display: none;"></input>
          </div>
 
@@ -1318,6 +1361,8 @@ Some more rare case examples of triggering word:
                 <option id="argument-cure-other" value="other">Other</option>
              </select>
 
+             <select name="argument-cure-tw" id="argument-cure-tw" required> </select>
+
              <input type="text" name="argument-cure-input" id="argument-cure-input" style="display: none;"></input>
          </div>
 
@@ -1335,6 +1380,8 @@ Some more rare case examples of triggering word:
                 <!--<option id="argument-death-impact" value="impact">Impact</option>-->
                 <option id="argument-death-other" value="other">Other</option>
              </select>
+
+             <select name="argument-death-tw" id="argument-death-tw" required> </select>
 
              <input type="text" name="argument-death-input" id="argument-death-input" style="display: none;"></input>
          </div>
