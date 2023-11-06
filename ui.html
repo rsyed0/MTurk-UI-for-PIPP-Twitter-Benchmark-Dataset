@@ -408,8 +408,8 @@ function edit_events(id)
 {
 
     let _index = id.indexOf('_');
-    let __index = id.indexOf('_', _index+1);
-    let extracted_tiggerword_token_qsn = id.substring(__index+1);
+    //let __index = id.indexOf('_', _index+1);
+    let extracted_tiggerword_token_qsn = id.substring(_index+1);
     let info = split_ttq(extracted_tiggerword_token_qsn);
 
     trigger_word = info["words"];
@@ -438,10 +438,12 @@ function edit_events(id)
             if (event_desc.includes(extracted_tiggerword_token_qsn)) {
                 contains_ettq = true;
 
+                console.log(event_desc);
                 let _i = event_desc.indexOf("_");
+                let __i = event_desc.indexOf("_", _i+1);
 
-                let event_arg = event_desc.substring(0,_i);
-                let event_tw = event_desc.substring(_i, event_desc.indexOf("_", _i+1));
+                let event_tw = event_desc.substring(0,_i);
+                let event_arg = event_desc.substring(_i+1, __i);
                 let dropdown = document.getElementById("argument-" + eventTypes[i]);
 
                 console.log("argument-" + eventTypes[i] + "-" + event_arg);
@@ -465,8 +467,9 @@ function edit_events(id)
 
     }
 
+    //contains_ettq = false;
     let index = events_words["flag"].indexOf(extracted_tiggerword_token_qsn);
-    for (let i=0;i<7;i++) {
+    /*for (let i=0;i<7;i++) {
         for (let j=0;j<events_words[eventTypes[i]].length;j++) {
             let event_desc = events_words[eventTypes[i]][j];
             if (event_desc.includes(extracted_tiggerword_token_qsn)) {
@@ -478,9 +481,9 @@ function edit_events(id)
                 break;
             }
         }
-    }
-    document.getElementById("flagg").checked = contains_ettq;
-    document.getElementById("argument-flag-div").style.display = contains_ettq ? "inline" : "none";
+    }*/
+    document.getElementById("flagg").checked = (index > -1); //contains_ettq;
+    document.getElementById("argument-flag-div").style.display = (index > -1) ? "inline" : "none";
 
 
     // TODO load argument(s) from events arrays
@@ -503,7 +506,7 @@ function getTriggerWords(eventType) {
     var output = [];
     events.forEach((event) => {
         const tokens = event.split("_");
-        if (tokens[0] == "trigger"){
+        if (tokens[1] == "trigger" && tokens[tokens.length-1] == ids[question_number-1]){
             output.push(tokens[2] + " (" + tokens[3] + ")");
         }
     });
@@ -542,6 +545,12 @@ function updateDropdowns(sender) {
         }
 
         populateTriggerWordDropdown(eventTypes[i]);
+
+        /*if (document.getElementById("argument-" + eventTypes[i]).value == "trigger") {
+            document.getElementById("argument-" + eventTypes[i] + "-tw").disabled = true;
+        } else {
+            document.getElementById("argument-" + eventTypes[i] + "-tw").disabled = false;
+        }*/
     }
 
     if (sender == 7) {
@@ -602,12 +611,15 @@ function events_selected()
 
         if (selectedArg === "trigger") {
             selectedTw = "";
+        } else if (selectedTw == "") {
+            alert("Must select a trigger first");
+            return;
         }
 
         console.log(selectedArg);
 
         // add argument to triggerword token qsn
-        var triggerword_arg_token_qsn = selectedArg + "_" + selectedTw + "_" + triggerword_token_qsn; 
+        var triggerword_arg_token_qsn = selectedTw + "_" + selectedArg + "_" + triggerword_token_qsn; 
         //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
         console.log(triggerword_arg_token_qsn);
@@ -646,7 +658,7 @@ function events_selected()
     console.log(selectedArg);
 
     // add argument to triggerword token qsn
-    var triggerword_arg_token_qsn = selectedArg + "_" + selectedTw + "_" + triggerword_token_qsn; 
+    var triggerword_arg_token_qsn = selectedTw + "_" + selectedArg + "_" + triggerword_token_qsn; 
     //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
     index = events_words["flag"].indexOf(triggerword_arg_token_qsn);
@@ -786,8 +798,9 @@ function populateSelectedItems()
 
                     let event_desc = events_words[eventType][j];
                     if (event_desc.includes(item)) {
-                        let index = event_desc.indexOf("_");
-                        let argType = event_desc.substring(0, index);
+                        let _index = event_desc.indexOf("_");
+                        let __index = event_desc.indexOf("_", _index+1);
+                        let argType = event_desc.substring(_index+1, __index);
 
                         events += eventType + " (" + argType + "), ";
                     }
