@@ -337,9 +337,13 @@ function delete_tw(id)
 {
     
     let _index = id.indexOf('_');
+    //let __index = id.indexOf('_', _index+1);
     let extracted_tiggerword_token_qsn = id.substring(_index+1);
     let elem = document.getElementById("p_" + extracted_tiggerword_token_qsn);
     elem.remove();
+
+    console.log("removing " + extracted_tiggerword_token_qsn);
+    console.log(events_words["symptom"]);
     
     highlighted_words.delete(extracted_tiggerword_token_qsn);
     replace();
@@ -361,6 +365,7 @@ function delete_tw(id)
     index = events_words["symptom"].indexOf(extracted_tiggerword_token_qsn);
     if (index > -1) 
     {    
+        console.log("removing from symptom");
         events_words["symptom"].splice(index, 1); 
         s = list_to_string(events_words['symptom']);
         document.getElementById("symptom_trigger_words").value = s;
@@ -417,7 +422,7 @@ function edit_events(id)
 
     //trigger_word = getInfo(extracted_tiggerword_token_qsn, 'w');
     console.log(trigger_word);
-    document.getElementById("trigger_word_content").innerHTML = 'Editing the events that are triggered by "' + trigger_word + '"';
+    document.getElementById("trigger_word_content").innerHTML = 'Editing the events that are triggered by "' + trigger_word + ' ' + trigger_range + '"';
  
     var menu = document.getElementById("contextMenu")
     menu.style.display = 'block';
@@ -661,6 +666,8 @@ function events_selected()
     var triggerword_arg_token_qsn = selectedTw + "_" + selectedArg + "_" + triggerword_token_qsn; 
     //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
+    console.log(triggerword_arg_token_qsn);
+
     index = events_words["flag"].indexOf(triggerword_arg_token_qsn);
     if (checkBox.checked == true){
         if(events != "")
@@ -701,11 +708,11 @@ function events_selected()
         }*/
   
   hideMenu();
-  elem = document.getElementById("p_" + triggerword_token_qsn);
+  elem = document.getElementById("p_" + triggerword_arg_token_qsn);
   if(events === "")
   {
       elem.remove();
-      highlighted_words.delete(triggerword_token_qsn);
+      highlighted_words.delete(triggerword_arg_token_qsn);
       replace();
       return;
   }
@@ -714,12 +721,12 @@ function events_selected()
 
     if(elem)
     {
-        elem.innerHTML =  ' <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button>';
+        elem.innerHTML =  ' <span id="selection_' + triggerword_arg_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_arg_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_arg_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button>';
     }
     else
     {
         document.getElementById("trigger_words").innerHTML +=
-        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ triggerword_token_qsn + '"> <span id="selection_' + triggerword_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
+        ' <p style="border:1px solid black; width: 300px ;padding: 10px; margin: 10px;" id="p_'+ triggerword_arg_token_qsn + '"> <span id="selection_' + triggerword_arg_token_qsn + '">' + "Trigger_Word : " + '<span style="color:#1ec211">' + trigger_word + " " + trigger_range + '</span>' + '</span> <br> <span> Events: ' + '<span style="color:#1ec211">' + events + '</span>' + '</span> <br> <button class="btn" type="button" onclick="delete_tw(this.id)" id="delete_' + triggerword_arg_token_qsn + '"> <i class="fa fa-trash"> </i> Delete </button> <button class="btn" type="button" onclick="edit_events(this.id)" id="edit_' + triggerword_arg_token_qsn + '"> <i class="fa fa-edit"> </i> Edit </button> </p>';
     } 
   
 
@@ -1287,7 +1294,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-infect-other" value="other">Other</option>
              </select>
 
-             <select name="argument-infect-tw" id="argument-infect-tw" required> </select>
+             <select name="argument-infect-tw" id="argument-infect-tw"> </select>
 
              <input type="text" name="argument-infect-input" id="argument-infect-input" style="display: none;"></input>
          </div>
@@ -1308,7 +1315,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-spread-other" value="other">Other</option>
              </select>
 
-             <select name="argument-spread-tw" id="argument-spread-tw" required> </select>
+             <select name="argument-spread-tw" id="argument-spread-tw"> </select>
 
              <input type="text" name="argument-spread-input" id="argument-spread-input" style="display: none;"></input>
          </div>
@@ -1327,7 +1334,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-symptom-other" value="other">Other</option>
              </select>
 
-             <select name="argument-symptom-tw" id="argument-symptom-tw" required> </select>
+             <select name="argument-symptom-tw" id="argument-symptom-tw"> </select>
 
              <input type="text" name="argument-symptom-input" id="argument-symptom-input" style="display: none;"></input>
          </div>
@@ -1348,7 +1355,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-prevent-other" value="other">Other</option>
              </select>
 
-             <select name="argument-prevent-tw" id="argument-prevent-tw" required> </select>
+             <select name="argument-prevent-tw" id="argument-prevent-tw"> </select>
 
              <input type="text" name="argument-prevent-input" id="argument-prevent-input" style="display: none;"></input>
          </div>
@@ -1371,7 +1378,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-control-other" value="other">Other</option>
              </select>
 
-             <select name="argument-control-tw" id="argument-control-tw" required> </select>
+             <select name="argument-control-tw" id="argument-control-tw"> </select>
 
              <input type="text" name="argument-control-input" id="argument-control-input" style="display: none;"></input>
          </div>
@@ -1393,7 +1400,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-cure-other" value="other">Other</option>
              </select>
 
-             <select name="argument-cure-tw" id="argument-cure-tw" required> </select>
+             <select name="argument-cure-tw" id="argument-cure-tw"> </select>
 
              <input type="text" name="argument-cure-input" id="argument-cure-input" style="display: none;"></input>
          </div>
@@ -1413,7 +1420,7 @@ Some more rare case examples of triggering word:
                 <option id="argument-death-other" value="other">Other</option>
              </select>
 
-             <select name="argument-death-tw" id="argument-death-tw" required> </select>
+             <select name="argument-death-tw" id="argument-death-tw"> </select>
 
              <input type="text" name="argument-death-input" id="argument-death-input" style="display: none;"></input>
          </div>
