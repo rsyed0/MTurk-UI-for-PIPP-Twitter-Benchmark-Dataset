@@ -340,10 +340,13 @@ function delete_tw(id)
     //let __index = id.indexOf('_', _index+1);
     let extracted_tiggerword_token_qsn = id.substring(_index+1);
     let elem = document.getElementById("p_" + extracted_tiggerword_token_qsn);
-    elem.remove();
 
+    // console.log("elem: ", elem);
+    
+    elem.remove();
+    // console.log("elem after remove: ", document.getElementById("p_" + extracted_tiggerword_token_qsn));
+    
     console.log("removing " + extracted_tiggerword_token_qsn);
-    console.log(events_words["symptom"]);
     
     highlighted_words.delete(extracted_tiggerword_token_qsn);
     replace();
@@ -363,6 +366,13 @@ function delete_tw(id)
         document.getElementById("spread_trigger_words").value = s;
     }
     index = events_words["symptom"].indexOf(extracted_tiggerword_token_qsn);
+    // for (var i = 0; i < events_words["symptom"].length; i++) {
+    //     console.log(i + ": " + events_words["symptom"][i]);
+    //     console.log(events_words["symptom"][i].length);
+    //     console.log(extracted_tiggerword_token_qsn.length);
+    //     console.log(events_words["symptom"][i] == extracted_tiggerword_token_qsn);
+    // }
+    // console.log(events_words["symptom"].indexOf(extracted_tiggerword_token_qsn));
     if (index > -1) 
     {    
         console.log("removing from symptom");
@@ -405,6 +415,8 @@ function delete_tw(id)
         s = list_to_string(events_words['flag']);
         document.getElementById("flag_trigger_words").value = s;
     }
+
+    // console.log("after deleting: " + events_words["symptom"]);
     
     hideMenu();
 }
@@ -429,8 +441,8 @@ function edit_events(id)
 
     const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
 
-    console.log(events_words["infect"]);
-    console.log(extracted_tiggerword_token_qsn);
+    // console.log(events_words["infect"]);
+    // console.log(extracted_tiggerword_token_qsn);
 
     for (let i=0;i<7;i++) {
         document.getElementById("argument-" + eventTypes[i] + "-div").style.display = "none";
@@ -621,13 +633,13 @@ function events_selected()
             return;
         }
 
-        console.log(selectedArg);
-
+        // console.log("selected arg 1: " + selectedArg);
+        
         // add argument to triggerword token qsn
         var triggerword_arg_token_qsn = selectedTw + "_" + selectedArg + "_" + triggerword_token_qsn; 
         //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
-
-        console.log(triggerword_arg_token_qsn);
+    
+        // console.log("trigger word arg token 1: " + triggerword_arg_token_qsn);
 
         index = events_words[eventType].indexOf(triggerword_arg_token_qsn);
         if (checkBox.checked == true){
@@ -638,6 +650,8 @@ function events_selected()
             {
                 // creating event
                 events_words[eventType].push(triggerword_arg_token_qsn);
+                // console.log("updated events words: " + events_words["symptom"]);
+
                 s = list_to_string(events_words[eventType]);
                 document.getElementById(eventType + "_trigger_words").value = s;
             }
@@ -653,30 +667,30 @@ function events_selected()
     }
 
     var checkBox = document.getElementById("flagg");
-    var selectedArg = document.getElementById("argument-flag-input").value;
+    var selectedArgFlag = document.getElementById("argument-flag-input").value;
 
-    if (selectedArg === "" && checkBox.checked) {
+    if (selectedArgFlag === "" && checkBox.checked) {
         alert("Must submit a reason for flagging");
         return;
     }
 
-    console.log(selectedArg);
+    // console.log("selected arg: " + selectedArgFlag);
 
     // add argument to triggerword token qsn
-    var triggerword_arg_token_qsn = selectedTw + "_" + selectedArg + "_" + triggerword_token_qsn; 
+    var triggerword_arg_token_qsn_flag = selectedTw + "_" + selectedArgFlag + "_" + triggerword_token_qsn; 
     //triggerword_token_qsn.substring(0,idx) + "_" + selectedArg + triggerword_token_qsn.substring(idx);
 
-    console.log(triggerword_arg_token_qsn);
+    // console.log("trigger word arg token: " + triggerword_arg_token_qsn_flag);
 
-    index = events_words["flag"].indexOf(triggerword_arg_token_qsn);
+    index = events_words["flag"].indexOf(triggerword_arg_token_qsn_flag);
     if (checkBox.checked == true){
         if(events != "")
             events+=", ";
-        events += "flag (" + selectedArg + ")";
+        events += "flag (" + selectedArgFlag + ")";
         if(index==-1)
         {
             // creating event
-            events_words["flag"].push(triggerword_arg_token_qsn);
+            events_words["flag"].push(triggerword_arg_token_qsn_flag);
             s = list_to_string(events_words["flag"]);
             document.getElementById("flag_trigger_words").value = s;
         }
