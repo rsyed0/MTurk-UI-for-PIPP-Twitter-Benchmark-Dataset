@@ -27,12 +27,14 @@ let events_words = {
 let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
 let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
 let event_names = ['${name1}', '${name2}', '${name3}', '${name4}', '${name5}'];
-let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]'];
+let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-76","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-65","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"54-67","disease":"","place":"","time":"11","duration":"","information":""}]'];
 // let annotations_list = ['${annotations1}', '${annotations2}', '${annotations3}', '${annotations4}', '${annotations5}']; // TODO: switch this back out when pasting onto live site
 let current_table = "small";
+let output_obj = {};
  
 
 window.onload = function() {
+
   
   for (let i = 1; i <= field_names.length; i++) {
         let ele = document.createElement("H2");
@@ -46,26 +48,40 @@ window.onload = function() {
         document.querySelector("#events").appendChild(ele2);
         
         const annotations = JSON.parse(annotations_list[i-1]);
-        // the prefilled annotations
-        // let ele3 = document.createElement("p");
-        // ele3.textContent = annotations_list[i-1];
-        // ele3.setAttribute('id', 'annotation'+String(i));
-        // ele3.style.cssText = "border:1px solid black; width: 300px ;padding: 10px; margin: 10px;";
-        // document.querySelector("#annotations").appendChild(ele3);
 
         const annotation_div = document.createElement('div');
         annotation_div.setAttribute('id', `annotation_div${i}`);
 
         // Populate the div with p elements
         for (let j = 0; j < annotations.length; j++) {
-            // let annotated_event = document.createElement("p");
-            // annotated_event.textContent = JSON.stringify(annotations[j]);
-            // annotated_event.setAttribute('id', 'annotation'+String(i));
-            // annotated_event.style.cssText = "border:1px solid black; width: 300px ;padding: 10px; margin: 10px;";
-            // annotation_div.appendChild(annotated_event);
-            annotation_div.innerHTML += parseAnnotationJSONToHtml(annotations[j], `annotation_${i}_${j}`);
+            annotation_div.innerHTML += parseAnnotationJSONToHtml(annotations[j], `${i}_${j}`);
+
+            output_obj[`${i}_${j}`] = {
+                text: field_names[i-1],
+                annotation: annotations[j],
+                correct: true,
+                explanation: null,
+            };
         }
         document.querySelector("#annotations").appendChild(annotation_div);
+
+        // attach onchange event listener to the parent because the children are dynamically updated
+        parent_annotation_div = document.getElementById("text_annotations");
+        parent_annotation_div.addEventListener("input", function (event) {
+        // TODO: add the dynamic shit with the checkbox here
+        if (event.target.type == "checkbox") {
+            output_obj[event.target.name]["correct"] = !event.target.checked;
+        }
+
+        // Check if the target of the event is a textarea
+        if (event.target.tagName.toLowerCase() === "textarea") {
+          // Get the trimmed text content of the textarea
+          var text = event.target.value.trim();
+
+            // update output object
+            output_obj[event.target.name]["explanation"] = text
+        }
+      });
         
   }
   
@@ -93,7 +109,8 @@ window.onload = function() {
 function parseAnnotationJSONToHtml(jsonData, id) {
   var html = `<div id='${id}' style='border:1px solid black; width: 300px ;padding: 10px; margin: 10px;'>`;
 
-    html += `<div id="checkbox_${id}"> <crowd-checkbox type="checkbox" id="incorrect" name="name" value="" onclick="addIncorrect('${id}')" > </crowd-checkbox> <label for="incorrect"> incorrect? </label> </div>`;
+    html += `<div> <input type="checkbox" id="checkbox_${id}" name="${id}" value="" onclick="addIncorrect('${id}')" > </input> <label for="incorrect"> incorrect? </label> </div>`;
+    html += `<div id="expl_${id}"> <textarea id="expl_${id}_text" name="${id}" placeholder="Explanation"> </textarea> </div>`;
 
   for (var key in jsonData) {
     if (jsonData.hasOwnProperty(key)) {
@@ -230,6 +247,35 @@ function next()
     question_number = question_number + 1;
     document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
     document.getElementById("text_event").innerHTML = document.getElementById("event"+String(question_number)).innerHTML;
+    document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div"+String(question_number)).innerHTML;
+
+    console.log(output_obj);
+
+    /*
+    - maintain a JSON object of sorts to track annotations + comments
+    - TODO: make the textareas of checked boxes mandatory
+    - scrape all the textareas for their values
+    - Throw it into JSON object
+
+    JSON object format:
+    [
+        {
+            text: "I have covid omg"
+            annotation: "lorem ipsum",
+            correct: false
+            explanation: "Lorem ipsum"
+        },
+        {
+            text: "I have covid omg"
+            annotation: "lorem ipsum",
+            correct: false
+            explanation: "Lorem ipsum"
+        },
+    ]
+    
+    and then we can just serialize this as a string
+    */
+
     replace();
     populateSelectedItems();
     document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
@@ -586,7 +632,6 @@ function populateTriggerWordDropdown(eventType) {
 }
 
 function updateDropdowns(sender) {
-
     console.log("reg " + sender);
 
     const eventTypes = ["infect", "spread", "symptom", "prevent", "control", "cure", "death"];
@@ -625,9 +670,6 @@ function updateOtherDropdowns(i) {
 
 }
 
-function addIncorrect(id) {
-    console.log("add incorrect " + id);
-}
 
 function events_selected()
 {
@@ -786,6 +828,14 @@ function events_selected()
   
 
     
+}
+
+function handle_submit() {
+    console.log(JSON.stringify(output_obj));
+
+    document.getElementById("master_object").value = JSON.stringify(output_obj);
+
+    console.log(document.getElementById("master_object"));
 }
 
 function split_ttq(ttq)
@@ -1310,6 +1360,7 @@ Some more rare case examples of triggering word:
       <crowd-input style="display:none;" type="text" id="cure_trigger_words" name="cure_trigger_words"></crowd-input>
       <crowd-input style="display:none;" type="text" id="death_trigger_words" name="death_trigger_words"></crowd-input>
       <crowd-input style="display:none;" type="text" id="flag_trigger_words" name="flag_trigger_words"></crowd-input>
+      <crowd-input style="display:none;" type="text" id="master_object" name="master_object"></crowd-input>
   </div>
         <div id="contextMenu" class="context-menu" 
         style="display:none; border:1px solid black; width: 400px ;padding: 10px; margin: 10px;">
@@ -1499,7 +1550,7 @@ Some more rare case examples of triggering word:
     <div id="text_annotations"></div>
     <div id="trigger_words"></div>
   
- <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled>Submit HIT</button> 
+ <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled onclick="handle_submit()">Submit HIT</button> 
 
 
   </div>
