@@ -27,13 +27,9 @@ let events_words = {
 let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
 let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
 let event_names = ['${name1}', '${name2}', '${name3}', '${name4}', '${name5}'];
+let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]'];
+// let annotations_list = ['${annotations1}', '${annotations2}', '${annotations3}', '${annotations4}', '${annotations5}']; // TODO: switch this back out when pasting onto live site
 let current_table = "small";
-
-// let field_names = ["This is4 *a d->umm&y sen(ten 'ce, it ! is    just. an ex:ample?", 
-//               "Remember that Stanford study claiming coronovirus infection far more prevalent than we all thought and fatality rates correspondingly lower Turns out it was funded by head of JetBlue who was fishing for arguments to get his planes flying again (url)",
-//               "So people claiming Ali sbka hai and more curious about corona than Youm e Ali as itself Its not a surprise that they dont share anything related to event/date but triggered and are sharing about corono Yome Ali ki waja se spread hoga type thingsn (url)",
-//               "People who talk loudly can release 10 times more coronavirusinfected particles into the air then those who speak more softly an NIH study finds Wearing a mask reduces the spread of COVID19 whether you use your inside or outside voice (url)",
-//               "Stay home abstinenceWear a mask condomGo out and live like normal raw dog it and pray you can afford the chances youre taking"];
  
 
 window.onload = function() {
@@ -48,10 +44,34 @@ window.onload = function() {
         ele2.textContent = "Event: " + event_names[i-1];
         ele2.setAttribute('id', 'event'+String(i));
         document.querySelector("#events").appendChild(ele2);
+        
+        const annotations = JSON.parse(annotations_list[i-1]);
+        // the prefilled annotations
+        // let ele3 = document.createElement("p");
+        // ele3.textContent = annotations_list[i-1];
+        // ele3.setAttribute('id', 'annotation'+String(i));
+        // ele3.style.cssText = "border:1px solid black; width: 300px ;padding: 10px; margin: 10px;";
+        // document.querySelector("#annotations").appendChild(ele3);
+
+        const annotation_div = document.createElement('div');
+        annotation_div.setAttribute('id', `annotation_div${i}`);
+
+        // Populate the div with p elements
+        for (let j = 0; j < annotations.length; j++) {
+            // let annotated_event = document.createElement("p");
+            // annotated_event.textContent = JSON.stringify(annotations[j]);
+            // annotated_event.setAttribute('id', 'annotation'+String(i));
+            // annotated_event.style.cssText = "border:1px solid black; width: 300px ;padding: 10px; margin: 10px;";
+            // annotation_div.appendChild(annotated_event);
+            annotation_div.innerHTML += parseAnnotationJSONToHtml(annotations[j], `annotation_${i}_${j}`);
+        }
+        document.querySelector("#annotations").appendChild(annotation_div);
+        
   }
   
   document.getElementById("text_question").innerHTML = document.getElementById("question"+String(question_number)).innerHTML;
   document.getElementById("text_event").innerHTML = document.getElementById("event"+String(question_number)).innerHTML;
+  document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div"+String(question_number)).innerHTML;
   originalText = document.getElementById("text_question").innerHTML;
 
   replace();
@@ -67,6 +87,23 @@ window.onload = function() {
   document.getElementById("cure_trigger_words").value = "default,";
   document.getElementById("death_trigger_words").value = "default,";
   document.getElementById("flag_trigger_words").value = "default,";
+}
+
+// Function to convert an annotated event in JSON to HTML
+function parseAnnotationJSONToHtml(jsonData, id) {
+  var html = `<div id='${id}' style='border:1px solid black; width: 300px ;padding: 10px; margin: 10px;'>`;
+
+    html += `<div id="checkbox_${id}"> <crowd-checkbox type="checkbox" id="incorrect" name="name" value="" onclick="addIncorrect('${id}')" > </crowd-checkbox> <label for="incorrect"> incorrect? </label> </div>`;
+
+  for (var key in jsonData) {
+    if (jsonData.hasOwnProperty(key)) {
+      // Create a <p> element for each key-value pair
+      html += "<p style='margin: 0px'>" + key + ": " + "<span style='color:#1ec211'>" + jsonData[key] + "</span></p>";
+    }
+  }
+
+  html += "</div>"; // Close the container element
+  return html;
 }
 
 function isAlphanumeric(str) {
@@ -586,6 +623,10 @@ function updateOtherDropdowns(i) {
 
     document.getElementById("argument-" + eventTypes[i] + "-input").style.display = (document.getElementById("argument-" + eventTypes[i]).value == "other") ? "inline" : "none";
 
+}
+
+function addIncorrect(id) {
+    console.log("add incorrect " + id);
 }
 
 function events_selected()
@@ -1253,15 +1294,13 @@ Some more rare case examples of triggering word:
     <p style="padding-left:10px;color:red;width:350px;"><b>Please read the instructions before attempting the task</b></p>
   </div>
 
-  <div id="events" style="display:none;">
-  </div>
-  <div id="questions" style="display:none;">
-  </div>
-     <!--<p id="questions">-->
+  <!-- We store the events in the 5 pages in these divs -->
+  <div id="events" style="display:none;"></div>
+  <div id="questions" style="display:none;"></div>
+  <div id="annotations" style="display:none;"></div>
+
      <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;" id="text_event"></p>
      <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;" id="text_question" onmouseup="select(event);"></p>
-     <!--<p style="width:350px; margin:5px; padding:5px; border:1px solid black;" id="text_question" ondblclick="doubleClick(event);"></p>-->
-    <!--</p>-->
   <div>
       <crowd-input style="display:none;" type="text" id="infect_trigger_words" name="infect_trigger_words"></crowd-input>
       <crowd-input style="display:none;" type="text" id="spread_trigger_words" name="spread_trigger_words"></crowd-input>
@@ -1457,9 +1496,8 @@ Some more rare case examples of triggering word:
     
     <p style="padding-left:10px;color:#2c18e3;width:350px;">Trigger words and Events:</p>
     
-    <div id="trigger_words">
-       
-    </div>
+    <div id="text_annotations"></div>
+    <div id="trigger_words"></div>
   
  <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled>Submit HIT</button> 
 
