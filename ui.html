@@ -50,13 +50,13 @@ window.onload = function() {
         const annotations = JSON.parse(annotations_list[i-1]);
 
         const annotation_div = document.createElement('div');
-        annotation_div.setAttribute('id', `annotation_div${i}`);
+        annotation_div.setAttribute('id', `annotation_div` + i);
 
         // Populate the div with p elements
         for (let j = 0; j < annotations.length; j++) {
-            annotation_div.innerHTML += parseAnnotationJSONToHtml(annotations[j], `${i}_${j}`);
+            annotation_div.innerHTML += parseAnnotationJSONToHtml(annotations[j], i + "_" + j);
 
-            output_obj[`${i}_${j}`] = {
+            output_obj[i + "_" + j] = {
                 text: field_names[i-1],
                 annotation: annotations[j],
                 correct: true,
@@ -107,20 +107,24 @@ window.onload = function() {
 
 // Function to convert an annotated event in JSON to HTML
 function parseAnnotationJSONToHtml(jsonData, id) {
-  var html = `<div id='${id}' style='border:1px solid black; width: 300px ;padding: 10px; margin: 10px;'>`;
+  var html = `<div id='`+id+`' style='border:1px solid black; width: 400px ;padding: 10px; margin: 10px; display: flex; justify-content: space-between;'>`;
 
-    html += `<div> <input type="checkbox" id="checkbox_${id}" name="${id}" value="" onclick="addIncorrect('${id}')" > </input> <label for="incorrect"> incorrect? </label> </div>`;
-    html += `<div id="expl_${id}"> <textarea id="expl_${id}_text" name="${id}" placeholder="Explanation"> </textarea> </div>`;
-
-  for (var key in jsonData) {
-    if (jsonData.hasOwnProperty(key)) {
-      // Create a <p> element for each key-value pair
-      html += "<p style='margin: 0px'>" + key + ": " + "<span style='color:#1ec211'>" + jsonData[key] + "</span></p>";
+    
+    html += "<div class='annotation_arguments' style='margin-right: 10px; width: 50%;'>"
+        
+    for (var key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            // Create a <p> element for each key-value pair
+                html += "<p style='margin: 0px'>" + key + ": " + "<span style='color:#1ec211'>" + jsonData[key] + "</span></p>";
+        }
     }
-  }
+            
+    html += "</div>";
+    html += `<div class='verfication_corrections' style='margin-left: 10px;'><div style='margin-bottom: 10px;'> <label for="checkbox_`+id+`"> Incorrect? </label><input type="checkbox" id="checkbox_`+id+`" name="`+id+`" value="" onclick="addIncorrect('`+id+`')" > </input>  </div>`;
+    html += `<div id="expl_`+id+`"><label for="expl_`+id+`_text"> What's wrong: </label><textarea id="expl_`+id+`_text" name="`+id+`" placeholder="Explanation" style='width: 95%;'> </textarea> </div></div>`;
 
-  html += "</div>"; // Close the container element
-  return html;
+    html += "</div>"; // Close the container element
+    return html;
 }
 
 function isAlphanumeric(str) {
@@ -1548,6 +1552,24 @@ Some more rare case examples of triggering word:
     <p style="padding-left:10px;color:#2c18e3;width:350px;">Trigger words and Events:</p>
     
     <div id="text_annotations"></div>
+
+    <!-- <div id='`+id+`' style='border:1px solid black; width: 300px ;padding: 10px; margin: 10px; display: flex; justify-content: space-between;'>
+        <div>
+        <p style='margin: 0px'>trigger: <span style='color:#1ec211'>your</span></p>
+        <p style='margin: 0px'>disease: <span style='color:#1ec211'>mom</span></p>
+        <p style='margin: 0px'>disease: <span style='color:#1ec211'>mom</span></p>
+        <p style='margin: 0px'>disease: <span style='color:#1ec211'>mom</span></p>
+        <p style='margin: 0px'>disease: <span style='color:#1ec211'>mom</span></p>
+        <p style='margin: 0px'>disease: <span style='color:#1ec211'>mom</span></p>
+        </div>
+    <div>
+        <div>
+            <input type="checkbox" id="checkbox_`+id+`" name="`+id+`" value="" onclick="addIncorrect('`+id+`')"> </input> <label for="incorrect"> incorrect? </label> 
+        </div>
+        <div id="expl_`+id+`"> <textarea id="expl_`+id+`_text" name="`+id+`" placeholder="Explanation"> </textarea></div>
+    </div>
+</div> -->
+
     <div id="trigger_words"></div>
   
  <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled onclick="handle_submit()">Submit HIT</button> 
