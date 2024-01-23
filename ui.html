@@ -18,7 +18,6 @@
 
         let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
         let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
-        let event_names = ['${name1}', '${name2}', '${name3}', '${name4}', '${name5}'];
         let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-76","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-65","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"54-67","disease":"","place":"","time":"11","duration":"","information":""}]'];
         // let annotations_list = ['${annotations1}', '${annotations2}', '${annotations3}', '${annotations4}', '${annotations5}']; // TODO: switch this back out when pasting onto live site
         let current_table = "small";
@@ -33,11 +32,6 @@
                 ele.textContent = field_names[i - 1];
                 ele.setAttribute('id', 'question' + String(i));
                 document.querySelector("#questions").appendChild(ele);
-
-                let ele2 = document.createElement("H3");
-                ele2.textContent = "Event: " + event_names[i - 1];
-                ele2.setAttribute('id', 'event' + String(i));
-                document.querySelector("#events").appendChild(ele2);
 
                 const annotations = JSON.parse(annotations_list[i - 1]);
 
@@ -78,7 +72,6 @@
             }
 
             document.getElementById("text_question").innerHTML = document.getElementById("question" + String(question_number)).innerHTML;
-            document.getElementById("text_event").innerHTML = document.getElementById("event" + String(question_number)).innerHTML;
             document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div" + String(question_number)).innerHTML;
             originalText = document.getElementById("text_question").innerHTML;
 
@@ -116,8 +109,6 @@
 
         let lang = "jp";
         function replace() {
-            let currEventName = event_names[question_number - 1];
-
             let currText = field_names[question_number - 1];
             let v = [];
             let i = 0;
@@ -189,14 +180,12 @@
             }
 
             document.getElementById("text_question").innerHTML = result;
-            document.getElementById("text_event").innerHTML = "Event: " + currEventName;
 
         }
 
         function previous() {
             question_number = question_number - 1;
             document.getElementById("text_question").innerHTML = document.getElementById("question" + String(question_number)).innerHTML;
-            document.getElementById("text_event").innerHTML = document.getElementById("event" + String(question_number)).innerHTML;
             replace();
             // populateSelectedItems();
             document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
@@ -212,7 +201,6 @@
         function next() {
             question_number = question_number + 1;
             document.getElementById("text_question").innerHTML = document.getElementById("question" + String(question_number)).innerHTML;
-            document.getElementById("text_event").innerHTML = document.getElementById("event" + String(question_number)).innerHTML;
             document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div" + String(question_number)).innerHTML;
 
             console.log(output_obj);
@@ -676,8 +664,6 @@
                 <!-- We store the output in the master object -->
                 <crowd-input type="text" style="display:none;" name="master_object" id="master_object"></crowd-input>
 
-                <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;"
-                    id="text_event"></p>
                 <p style="width:350px; font-size:100%; margin:20px; padding:20px; border:1px solid black;"
                     id="text_question"></p>
 
