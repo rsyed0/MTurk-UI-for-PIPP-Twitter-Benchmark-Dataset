@@ -96,7 +96,7 @@
             }
 
             html += "</div>";
-            html += `<div class='verfication_corrections' style='margin-left: 10px;'><div style='margin-bottom: 10px;'> <label for="checkbox_` + id + `"> Incorrect? </label><input type="checkbox" id="checkbox_` + id + `" name="` + id + `" value=""> </input>  </div>`;
+            html += `<div class='verification_corrections' style='margin-left: 10px;'><div style='margin-bottom: 10px;'> <label for="checkbox_` + id + `"> Incorrect? </label><input type="checkbox" id="checkbox_` + id + `" name="` + id + `" > </input>  </div>`;
             html += `<div id="expl_` + id + `"><label for="expl_` + id + `_text"> What's wrong: </label><textarea id="expl_` + id + `_text" name="` + id + `" placeholder="Explanation" style='width: 95%;'> </textarea> </div></div>`;
 
             html += "</div>"; // Close the container element
@@ -184,8 +184,12 @@
         }
 
         function previous() {
+            // cache previous responsees
+            // document.getElementById("annotation_div" + String(question_number)).innerHTML = document.getElementById("text_annotations").innerHTML; // this doesn't do anything because the innerHTML is not updated
+
             question_number = question_number - 1;
             document.getElementById("text_question").innerHTML = document.getElementById("question" + String(question_number)).innerHTML;
+            document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div" + String(question_number)).innerHTML;
             replace();
             // populateSelectedItems();
             document.getElementById("submit_hit").disabled = (String(field_names.length) != String(question_number));
@@ -199,11 +203,13 @@
         }
 
         function next() {
+            // cache previous response
+            // document.getElementById("annotation_div" + String(question_number)).innerHTML = document.getElementById("text_annotations").innerHTML; // this doesn't do anything because the innerHTML is not updated
+
             question_number = question_number + 1;
             document.getElementById("text_question").innerHTML = document.getElementById("question" + String(question_number)).innerHTML;
             document.getElementById("text_annotations").innerHTML = document.getElementById("annotation_div" + String(question_number)).innerHTML;
 
-            console.log(output_obj);
 
             /*
             - maintain a JSON object of sorts to track annotations + comments
