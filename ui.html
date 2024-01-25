@@ -326,14 +326,46 @@
 
         <crowd-instructions link-text="View instructions" link-type="button">
             <short-summary>
-                <p>An Event is defined as something happens in a sentence. In this task, we are trying to identity
+                <p>An Event is defined as something happens in a sentence. Each event may has several arguments, which
+                    contain more specific information we are interested in. In this task, we are trying to identify
                     whether one or more of the following events exist in a given string: <i>infect,
-                        spread,symptom,prevent,control, cure, and death</i>. And if an event exist, what is the major
-                    <b>triggering word</b> that mostly manifest its occurrence.
+                        spread,symptom,prevent,control, cure, and death</i> as well as some of their arguments.
                     <br><br>
-                    If there exists explicit negation of an event, we say that the event does NOT exists and do NOT mark
-                    it as a triggering word.
+                    If an event exists, there will be a major <b>triggering word</b> that mostly manifests its
+                    occurrence.
+                    We then search for arguments related to this event from the sentence (which may or may not exist).
                     <br><br>
+                    For each sentence, we have already marked the Event (if any) and its triggering word, as well as
+                    their arguments (if any). Your task is to <b>look through these annotations</b> and check
+                    "incorrect" if you disagree with them and write down your opinion.
+
+                    <br><br>
+                    Generally, do the three things for each sentence you receive:
+                <ol>
+                    <li>Look through each event and their arguments, if you agree with everything, move on to the next
+                        question.</li>
+                    <li>If you think any annotations are incorrect, clicked the ""incorrect"" box and write down your
+                        opinion in the box below.</li>
+                    <li>If you think current event should not exist or other events should exist in this sentence,
+                        clicked the ""incorrect"" box and write down your opinion in the box below.</li>
+                </ol>
+                <br><br>
+                While using your best knowledge to judge does each event and each argument make sense, here are some
+                rules specific to this task:
+                <ol>
+
+                    <li>If there is explicit negation of an event, that event should not exist. <br>
+                        Example: In ""This vaccine cannot cure the illness"", event cure does not exist.</li>
+                    <li>Arguments are not required to be rigorous or specific. <br>
+                        Example: ""Recently"", ""at home"", ""a lot of"" are valid time, place, value arguments
+                        respectively."</li>
+                    <li>One sentence can have multiple events; each event are not required to have all arguments; many
+                        arguments can share the same argument role.</li>
+
+                </ol>
+
+                <br><br>
+
                 <table id="events_table" style="margin-right : 20px; margin-left : 150px; float:none;">
                     <tr>
                         <td width="2%"><b>Event</b></td>
@@ -375,26 +407,7 @@
                     </tr>
                 </table>
 
-                </p>
 
-                <p> In order to annotate, first click once on a word that you think is a potential argument for the
-                    described event. Then you would have to choose which event is being triggered by that word. You also
-                    have the option to delete an already chosen trigger word or edit the events triggered by it
-                </p>
-                <p>
-                <ul>Important Notes:
-                    <li> There can be sentences without any events. No need to annotate anything for such sentences.
-                    </li>
-                    <li> A trigger word can be linked to one or more events. Choose all possible events in such cases.
-                    </li>
-                    <li> Multiple events can be present in a given sentence. Mark all such events. </li>
-                    <li> The same event can occur multiple times (at different parts) in the same sentence. Mark all
-                        occurrences of the event. </li>
-                    <li> You will be able to submit the HIT at the last sentence once you finish annotating all the
-                        sentences. </li>
-                    <li> Select the "flag" event if you see multiple words as triggering words or any other ambiguous
-                        situations, but do not abuse this function. </li>
-                </ul>
                 </p>
 
             </short-summary>
@@ -561,96 +574,135 @@
 
             </detailed-instructions>
             <positive-example>
-                <p>Example 1: "The government has imposed mask requirement and social distance, so every one please
-                    remember to wear a mask and follow the rules to prevent infection and protect our nation from the
-                    virus."
-                <p>Annotation: <br>
-                <ol type="a">
-                    <li> <span style="color:blue"> <b>prevent</b></span> -> Event <i>prevent</i> </li>
-                    <li> <span style="color:blue"> <b>protect</b></span> -> Event <i>control</i></li>
-                </ol>
-                <ol>
-                    Note 1: Although infection is mentioned, it is prevented, meaning no infection is happening in the
-                    sentence, so event "infect" does NOT exist.<br> <br>
-                    Note 2: One cannot protect a nation individually, so "protect" triggers event "control", not
-                    "prevent". <br><br>
-                    <span style="color:red"> Do NOT mark negation of an event. </span>
-                </ol>
-                </p>
+                <table>
+                    <tr>
+                    <th>Example Text</th>
+                      <th>Event</th>
+                      <th>Argument</th>
+                      <th>Annotation</th>
+                      <th>Agreement</th>
+                      <th>Reason if disagree</th>
+                    </tr>
+                    <tr>
+                    <td rowspan="7">The principal claims that despite 10 more students and 3 more instructors testing positive today, masking on campus still needs not be mandatory.
+                    </td>
+                    <td rowspan="7">infect</td>
+                      <td>Trigger</td>
+                      <td>positive</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Infected</td>
+                      <td>students, instructors</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Disease</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Place</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Time</td>
+                      <td>today</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Value</td>
+                      <td>10,3</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Information-Source</td>
+                      <td>The principal</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                    <td>This year, more people are dying of unemployment and starvation instead of COVID.
+                    </td>
+                    <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td>People aren't dying of COVID, so the event death doesn't occur.</td>
+                    </tr>
+                </table>
+                  
             </positive-example>
-
-            <positive-example>
-                <p>Example 2 : "If you ever have a fever, or cough, or have a sore throat, or have difficulty breathing,
-                    do a COVID test immediately since you may have been infected."
-                <p>Annotation: <br>
-                <ol type="a">
-                    <li> ...<span style="color:blue"> <b>have</b></span> a fever... -> Event <i>symptom</i></li>
-                    <li> been <span style="color:blue"> <b>infected</b></span> -> Event <i>infect</i> </li>
-                </ol>
-                <ol>
-                    Note 1: If there are two or more parallel phrases triggering event "symptom", only mark the first
-                    triggering word instead of all of them. <br><br>
-                    <span style="color:red"> Mark first trigger if 2 or more parallel ones. </span><br><br>
-                    Note 2: Intuitively, getting tested for COVID helps to control the pandemic, but event "control"
-                    does not exist since it has no trigger words.<br><br>
-                    <span style="color:red"> Event must be determined via triggering word and CANNOT be inferred from
-                        another Event. </span><br><br>
-                    Note 3: Event "infect" has no explicit negation, so it still can happen, meaning an event "infect"
-                    exists.<br>
-                </ol>
-                </p>
-            </positive-example>
-
-
+                
             <negative-example>
-                <p>Example 1: "The government has imposed mask requirement and social distance, so every one please
-                    remember to wear a mask and follow the rules."</p>
-                <p>WRONG Annotation: <br>
-                <ol type="a">
-                    <li> <span style="color:blue"> <b>imposed</b></span> -> Event <i>control</i> </li>
-                </ol>
-
-                Correct Annotation: <br>
-                <ol type="a">
-                    <li> No events present in sentence </li>
-                </ol>
-                <ol>
-                    Note 1: "mask requirement" and "social distance" are policies to control the COVID pandemic. But
-                    there is no mention of COVID/virus/disease in the sentence, it’s unclear if these measures help to
-                    control the pandemic. Thus, no <i>control</i> event. <br> <br>
-                    Note 2: ”wear a mask" and "follow the rules" are actions to prevent COVID infection, but again since
-                    nothing is explicitly specified, no <i>prevent</i> event is annotated.
-                </ol>
-
-                <span style="color:red"> Look for Events themselves instead of actions/policies related to Events.
-                </span>
-                </p>
-            </negative-example>
-
-            <negative-example>
-                <p>Example 2 : "Two weeks of quarantine is killing me! May God cure my mind and stop my crazy thoughts."
-                </p>
-                <p>WRONG Annotation: <br>
-                <ol type="a">
-                    <li> <span style="color:blue"> <b>killing</b></span> -> Event <i>death</i> </li>
-                </ol>
-
-                Correct Annotation: <br>
-                <ol type="a">
-                    <li> No events present in sentence </li>
-                </ol>
-
-                <ol>
-                    Note 1: “killing” is not indicating real end of somebody's life, so Event death does NOT exist here.
-                    <br> <br>
-                    Note 2: "cure" doesn’t indicate the cure against the disease. Thus, it is not a triggering word of
-                    Event <i>cure</i>.
-                </ol>
-
-                <span style="color:red"> DO NOT identify hyperbole or other rhetorical device as Events. </span> <br>
-                <span style="color:red"> Synonyms of Event names are likely to be triggering words but NOT GUARANTEED!!
-                    Must double check Event definition! </span>
-                </p>
+                <table>
+                    <tr>
+                    <th>Example Text</th>
+                      <th>Event</th>
+                      <th>Argument</th>
+                      <th>Annotation</th>
+                      <th>Agreement</th>
+                      <th>Reason if disagree</th>
+                    </tr>
+                    <tr>
+                    <td rowspan="8">Wearing a mask cannot block any virus, but social distancing can protect you from COVID.
+                    </td>
+                    <td rowspan="8">prevent</td>
+                      <td>Trigger</td>
+                      <td>protect</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Agent</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Disease</td>
+                      <td>COVID</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Means</td>
+                      <td>Wearing a mask</td>
+                      <td><b>no</b></td>
+                      <td>Social distancing is the correct mean that can prevent infection.</td>
+                    </tr>
+                    <tr>
+                      <td>Target</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Information-Source</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Effectiveness</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Impact</td>
+                      <td>-</td>
+                      <td>yes</td>
+                      <td></td>
+                    </tr>
+                </table>
             </negative-example>
 
         </crowd-instructions>
@@ -1385,7 +1437,8 @@
                     <td> <span style="color:blue"> Collective efforts trying to impede the spread of a pandemic.</span>
                         <br>
                         eg. "the pandemic can be <b>stopped</b>." <br> "<b>Fight</b> against COVID." <br>
-                        "Government failed to <b>slow</b> down the spread of COVID." </td>
+                        "Government failed to <b>slow</b> down the spread of COVID."
+                    </td>
                 </tr>
                 <tr>
                     <td>cure</td>
