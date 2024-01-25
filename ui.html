@@ -366,7 +366,11 @@
 
                 <br><br>
                 <h3>Event Ontology:</h3>
-                <div style="display: flex; justify-content: center;">
+                <div id="event_instructions_table">
+                    <iframe style="width: 100%; height: 300px;"
+                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=483011926&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+                </div>
+                <!-- <div style="display: flex; justify-content: center;">
                     <table id="events_table" style="float:none;">
                         <tr>
                             <td width="2%"><b>Event</b></td>
@@ -407,309 +411,151 @@
                             words. </td>
                         </tr>
                     </table>
-                </div>
-                    
-                    
+                </div> -->
+
+
                 </p>
 
                 <br><br>
 
                 <h3>Summarized Argument Ontology:</h3>
                 <div id="arg_table_short">
-                    <iframe style="width: 100%; height: 500px;" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRsCM-NWkLNRjzScS_fui7kNV2VpxbZSJGezuhOPaUKcj8Li2uVk5YRxDeHj23p_TmSXtytGo1UfBQl/pubhtml?gid=1115352772&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+                    <iframe style="width: 100%; height: 500px;"
+                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=692645370&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
                 </div>
 
             </short-summary>
 
-            <detailed-instructions>
-
-                <p>
-                    Here are more detailed instructions for how to choose the most appropriate triggering word: <br>
-                    <br>
-                    Goal: Look for the one word that MOST LIKELY manifests the event's occurrence. You can use the
-                    following priority order for annotation:
-                <ol>
-                    <li> Most of the times, the trigger of the event will be the the <span style="color:blue"> <b>main
-                                verb </b></span> in the sentence. </li>
-                    <li> If the verb is ambiguous/vague, the trigger would be a <span style="color:blue"> <b> noun
-                            </b></span> semantically related to event. </li>
-                    <li> (Rare case) If no such noun exists, the trigger would be any <span style="color:blue"> <b>
-                                adjective/adverb </b></span> that is related to the event. </li>
-                    <li> If still confused, use your best judgement to select the trigger. </li>
-                </ol>
-                </p>
-
-                <p>
-                    <span style="color:blue"> <b>CASE I : main verb</b></span> <br>
-                    Example Sentence: "I was coughing and got a fever yesterday but today just confirmed I did not get
-                    COVID"<br>
-                    Annotation: There are 2 events of <i>symptom</i> and 1 event of <i>infect</i> in this example as
-                    follows (trigger words marked in blue): <br>
-                <ol type="a">
-                    <li>...<span style="color:blue"><b>got</b></span> a fever... ->Event <i>symptom</i></li>
-                    <li>...was <span style="color:blue"><b>coughing</b></span>... ->Event <i>symptom</i></li>
-                    <li>Note 1: “fever" and "COVID" are NOT marked as triggering word of the events since the main verbs
-                        indicate the event.<br>
-                        Note 2: Here, due to the presence of “and”, we have two occurrences of the event <i>symptom</i>.
-                    </li>
-                    <li>Also "get COVID" appears, but since there is a negation confirming no infection actually took
-                        place, there should be no infect event annotation.</li>
-                </ol>
-
-                Some more examples of main verb as triggering word:
-
-                <table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
-                    <tr>
-                        <td width="2%"><b>Example</b></td>
-                        <td width="1%"><b>Event</b></td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>fight</b></span> against the pandemic</td>
-                        <td> control </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>caught</b></span> a flu</td>
-                        <td> infect </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>recover</b></span> from COVID</td>
-                        <td> cure </td>
-                    </tr>
-                    <tr>
-                        <td>COVID <span style="color:blue"><b>takes</b></span> lives</td>
-                        <td> death </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>prevent</b></span> infection</td>
-                        <td> prevent </td>
-                    </tr>
-                    <tr>
-                        <td>stomach <span style="color:blue"><b>hurts</b></span></td>
-                        <td> symptom </td>
-                    </tr>
-                    <tr>
-                        <td>number of infection <span style="color:blue"><b>increases</b></span></td>
-                        <td> spread </td>
-                    </tr>
-
-                </table>
-                <br> <br>
-                </p>
-
-                <p>
-                    <span style="color:blue"> <b>CASE II : noun</b></span> <br>
-                    Example Sentence: "Fever, cough, and headache are the most common symptoms of COVID"<br>
-                    Annotation: Here we have 1 event of <i>symptom</i> event:
-
-                <ol type="a">
-                    <li> ...common <span style="color:blue"><b>symptoms...</b></span> ->Event <i>symptom</i></li> <br>
-                    Note: "fever", "cough", and "headache" manifest the <i>symptom</i> event but they are NOT triggering
-                    words because <span style="color:blue"><b>"symptoms"</b></span> better manifests the Event.<br>
-                </ol>
-
-                Some more examples of noun as triggering word:
-
-                <table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
-                    <tr>
-                        <td width="2%"><b>Example</b></td>
-                        <td width="1%"><b>Event</b></td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>death</b></span> rate</td>
-                        <td> death </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>therapy</b></span> for COVID</td>
-                        <td> cure </td>
-                    </tr>
-                    <tr>
-                        <td>infection <span style="color:blue"><b>prevention</b></span></td>
-                        <td> prevent </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>control</b></span> of spread</td>
-                        <td> control </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>signs</b></span> of infection</td>
-                        <td> symptom </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>Spreading</b></span> of COVID</td>
-                        <td> spread </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>infection</b></span> rate</td>
-                        <td> infect </td>
-                    </tr>
-
-                </table>
-
-                </p>
-
-                <p>
-                    <span style="color:blue"> <b>CASE III : adjective</b></span> <br>
-                    Example Sentence: "I am feverish since 2 days ago"<br>
-                    Annotation: Here we have 1 event of the <i>symptom</i> event:
-
-                <ol type="a">
-                    <li> ...am <span style="color:blue"><b>feverish...</b></span> ->Event <i>symptom</i></li> <br>
-                    Note: Here, we do not have a strong verb/noun for marking the trigger. Thus we mark "feverish"<br>
-                </ol>
-
-                Some more rare case examples of triggering word:
-
-                <table id="events_table" style="margin-right : 50%; margin-left : 5%; float:none;">
-                    <tr>
-                        <td width="2%"><b>Example</b></td>
-                        <td width="1%"><b>Event</b></td>
-                    </tr>
-                    <tr>
-                        <td>get <span style="color:blue"><b>rid</b></span> of disease</td>
-                        <td> cure </td>
-                    </tr>
-                    <tr>
-                        <td>stay<span style="color:blue"><b>cautious</b></span> against virus</td>
-                        <td> prevent </td>
-                    </tr>
-                    <tr>
-                        <td><span style="color:blue"><b>contagious</b></span> virus</td>
-                        <td> infect </td>
-                    </tr>
-                </table>
-
-                </p>
-
-
-            </detailed-instructions>
             <positive-example>
                 <table>
                     <tr>
-                    <th>Example Text</th>
-                      <th>Event</th>
-                      <th>Argument</th>
-                      <th>Annotation</th>
-                      <th>Agreement</th>
-                      <th>Reason if disagree</th>
+                        <th>Example Text</th>
+                        <th>Event</th>
+                        <th>Argument</th>
+                        <th>Annotation</th>
+                        <th>Agreement</th>
+                        <th>Reason if disagree</th>
                     </tr>
                     <tr>
-                    <td rowspan="7">The principal claims that despite 10 more students and 3 more instructors testing positive today, masking on campus still needs not be mandatory.
-                    </td>
-                    <td rowspan="7">infect</td>
-                      <td>Trigger</td>
-                      <td>positive</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td rowspan="7">The principal claims that despite 10 more students and 3 more instructors
+                            testing positive today, masking on campus still needs not be mandatory.
+                        </td>
+                        <td rowspan="7">infect</td>
+                        <td>Trigger</td>
+                        <td>positive</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Infected</td>
-                      <td>students, instructors</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Infected</td>
+                        <td>students, instructors</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Disease</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Disease</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Place</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Place</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Time</td>
-                      <td>today</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Time</td>
+                        <td>today</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Value</td>
-                      <td>10,3</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Value</td>
+                        <td>10,3</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Information-Source</td>
-                      <td>The principal</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Information-Source</td>
+                        <td>The principal</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                    <td>This year, more people are dying of unemployment and starvation instead of COVID.
-                    </td>
-                    <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td>People aren't dying of COVID, so the event death doesn't occur.</td>
+                        <td>This year, more people are dying of unemployment and starvation instead of COVID.
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td>People aren't dying of COVID, so the event death doesn't occur.</td>
                     </tr>
                 </table>
-                  
+
             </positive-example>
-                
+
             <negative-example>
                 <table>
                     <tr>
-                    <th>Example Text</th>
-                      <th>Event</th>
-                      <th>Argument</th>
-                      <th>Annotation</th>
-                      <th>Agreement</th>
-                      <th>Reason if disagree</th>
+                        <th>Example Text</th>
+                        <th>Event</th>
+                        <th>Argument</th>
+                        <th>Annotation</th>
+                        <th>Agreement</th>
+                        <th>Reason if disagree</th>
                     </tr>
                     <tr>
-                    <td rowspan="8">Wearing a mask cannot block any virus, but social distancing can protect you from COVID.
-                    </td>
-                    <td rowspan="8">prevent</td>
-                      <td>Trigger</td>
-                      <td>protect</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td rowspan="8">Wearing a mask cannot block any virus, but social distancing can protect you
+                            from COVID.
+                        </td>
+                        <td rowspan="8">prevent</td>
+                        <td>Trigger</td>
+                        <td>protect</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Agent</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Agent</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Disease</td>
-                      <td>COVID</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Disease</td>
+                        <td>COVID</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Means</td>
-                      <td>Wearing a mask</td>
-                      <td><b>no</b></td>
-                      <td>Social distancing is the correct mean that can prevent infection.</td>
+                        <td>Means</td>
+                        <td>Wearing a mask</td>
+                        <td><b>no</b></td>
+                        <td>Social distancing is the correct mean that can prevent infection.</td>
                     </tr>
                     <tr>
-                      <td>Target</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Target</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Information-Source</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Information-Source</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Effectiveness</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Effectiveness</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                     <tr>
-                      <td>Impact</td>
-                      <td>-</td>
-                      <td>yes</td>
-                      <td></td>
+                        <td>Impact</td>
+                        <td>-</td>
+                        <td>yes</td>
+                        <td></td>
                     </tr>
                 </table>
             </negative-example>
@@ -744,10 +590,15 @@
 
                     <div id="text_annotations"></div>
 
-                    <button type="submit" style="background-color:#f59d48;font-size:20px;" id="submit_hit" disabled
-                        onclick="handle_submit()">Submit HIT</button>
+                    <button type="submit"
+                        style="background-color:#f59d48;font-size:20px; margin-left: 10px; margin-bottom: 20px;"
+                        id="submit_hit" disabled onclick="handle_submit()">Submit HIT</button>
 
 
+                </div>
+                <div id="feedback_div" style="width: 200px; padding: 10px; margin: 10px; border:1px solid black;">
+                    <p style="margin-bottom: 0px; margin-top: 0px;">Please leave us feedback! We'd love to hear it!</p>
+                    <crowd-text-area name="feedback"></crowd-text-area>
                 </div>
             </div>
 
