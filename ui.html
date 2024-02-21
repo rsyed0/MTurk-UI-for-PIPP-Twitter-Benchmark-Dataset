@@ -18,7 +18,7 @@
 
         let field_names = ['${text1}', '${text2}', '${text3}', '${text4}', '${text5}'];
         let ids = ['${id1}', '${id2}', '${id3}', '${id4}', '${id5}'];
-        let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-76","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-65","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"54-67","disease":"","place":"","time":"11","duration":"","information":""}]'];
+        let annotations_list = ['[{"event": "symptom","trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}, {"event": "symptom","trigger":"69-76","person":"","symptom":"cough | fever","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-65","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"64-67","disease":"","place":"","time":"","duration":"","information":""}]', '[{"event": "symptom", "trigger":"69-73","person":"","symptom":"54-67","disease":"","place":"","time":"11","duration":"","information":""}]'];
         // let annotations_list = ['${annotations1}', '${annotations2}', '${annotations3}', '${annotations4}', '${annotations5}']; // TODO: switch this back out when pasting onto live site
         let current_table = "small";
         let output_obj = {};
@@ -86,12 +86,17 @@
             var html = `<div id='` + id + `' style='border:1px solid black; width: 400px ;padding: 10px; margin: 10px; display: flex; justify-content: space-between;'>`;
 
 
-            html += "<div class='annotation_arguments' style='margin-right: 10px; width: 50%;'>"
+            html += "<div class='annotation_arguments' style='margin-right: 10px; width: 50%;'>";
+
+            console.log(jsonData);
 
             for (var key in jsonData) {
                 if (jsonData.hasOwnProperty(key)) {
                     // Create a <p> element for each key-value pair
-                    html += "<p style='margin: 0px'>" + key + ": " + "<span style='color:#1ec211'>" + jsonData[key] + "</span></p>";
+                    const parts = jsonData[key].split('|');
+                    // Map over the parts and wrap each in a span tag with the specified style
+                    const formattedParts = parts.map(part => `<span style='color:#1ec211'>${part.trim()}</span>`);
+                    html += "<p style='margin: 0px'>" + key + ": " + formattedParts.join(", ") + "</p>";
                 }
             }
 
@@ -110,76 +115,8 @@
         let lang = "jp";
         function replace() {
             let currText = field_names[question_number - 1];
-            let v = [];
-            let i = 0;
-            let curr_word = "";
 
-            if (lang === "jp") {
-                while (i < currText.length) {
-                    if (currText[i] != ' ')
-                        v.push(currText[i]);
-                    i++;
-                }
-
-            } else {
-                while (i <= currText.length) {
-                    if (i == currText.length) {
-                        if (curr_word.length > 0)
-                            v.push(curr_word);
-                        break;
-                    }
-                    if (isAlphanumeric(String(currText[i]))) {
-                        if (curr_word.length > 0 && !isAlphanumeric(curr_word)) {
-                            v.push(curr_word);
-                            curr_word = "";
-                        }
-                        curr_word = curr_word + currText[i];
-                    }
-                    else if (currText[i] == ' ') {
-                        if (curr_word.length > 0) {
-                            v.push(curr_word);
-                        }
-                        curr_word = "";
-                    }
-                    else {
-                        if (curr_word.length > 0 && isAlphanumeric(curr_word)) {
-                            v.push(curr_word);
-                            curr_word = "";
-                        }
-                        curr_word = curr_word + currText[i];
-                    }
-                    i++;
-                }
-            }
-
-            let result = "";
-            i = 0;
-            let count = 0;
-            let w = v;
-
-            while (i < w.length) {
-                if (w[i].length > 0) {
-                    superscript = "_" + String(count);
-                    if (highlighted_words.has(w[i] + '_' + String(count) + '_' + String(question_number))) {
-                        console.log(w[i]);
-                        result = result + '<span style="background-color:#7FFF00">' + w[i] + '</span> ';
-                    }
-                    else {
-                        result = result + w[i] + superscript.sup() + ' ';
-                    }
-
-                    count++;
-
-                    // }
-                    // else
-                    // {
-                    //     result = result + w[i];
-                    // }
-                }
-                i++;
-            }
-
-            document.getElementById("text_question").innerHTML = result;
+            document.getElementById("text_question").innerHTML = currText;
 
         }
 
@@ -258,29 +195,6 @@
 
         const tables = ["small", "arg", "big"];
         const tt_to_ids = { "small": 0, "arg": 1, "big": 2 };
-        const table_descs = ["<u> Click here to view a simpler table</u>", "<u> Click here to view the arguments table</u>", "<u> Click here to view an exhaustive table</u>"];
-
-
-        function toggle_table(direction) {
-            function mod(n, m) {
-                return ((n % m) + m) % m;
-            }
-
-            let current_id = tt_to_ids[current_table];
-            let new_id = mod((current_id + direction), 3);
-            let back_id = mod((new_id - 1), 3);
-            let fwd_id = mod((new_id + 1), 3);
-
-            for (let i = 0; i < 3; i++) {
-                document.getElementById(tables[i] + "_table").style.display = "none";
-            }
-
-            document.getElementById(tables[new_id] + "_table").style.display = "block";
-            document.getElementById("table_toggler").innerHTML = table_descs[fwd_id];
-            document.getElementById("table_toggler2").innerHTML = table_descs[back_id];
-            current_table = tables[new_id];
-
-        }
 
     </script>
     <style>
@@ -318,10 +232,6 @@
             <span id="qsn_num"> </span>
             <button type="button" style="color:#FFFFFF;background-color:#4CAF50;" id="next_btn" onclick="next()">Next
                 &raquo;</button>
-            <span style="color:#3ca2c3;margin-left:45%;" id="table_toggler" onclick="toggle_table(1)"> <u> Click here to
-                    view an exhaustive table</u> </span>
-            <span style="color:#3ca2c3;margin-left:45%;" id="table_toggler2" onclick="toggle_table(-1)"> <u> Click here
-                    to view arguments table</u> </span>
         </div>
 
         <crowd-instructions link-text="View instructions" link-type="button">
@@ -355,70 +265,25 @@
                 <ol>
 
                     <li>If there is explicit negation of an event, that event should not exist. <br>
-                        Example: In ""This vaccine cannot cure the illness"", event cure does not exist.</li>
+                        <it>Example:</it> In "This vaccine cannot cure the illness", event cure does not exist.</li>
                     <li>Arguments are not required to be rigorous or specific. <br>
-                        Example: ""Recently"", ""at home"", ""a lot of"" are valid time, place, value arguments
+                        Example: "Recently", "at home", "a lot of" are valid time, place, value arguments
                         respectively."</li>
-                    <li>One sentence can have multiple events; each event are not required to have all arguments; many
-                        arguments can share the same argument role.</li>
+                    <li>One sentence can have multiple events. All annotations will be presented to you at once. <br>
+                        <it>Example:</it> In "I wear mask to <b>protect</b> myself from flu but I still <b>got</b> it", both EVENT [prevent] and EVENT
+                        [infect] exist.</li>
+                    <li>Each event is not required to have all the arguments; arguments not present are left blank.
+                    </li>
+                    <li>Multiple phrases may share the same argument role. <br>
+                        <it>Example:</it> In "Amy and Bob are <b>infected</b> by the virus", "Amy" and "Bob" are both marked as ARGUMENT
+                        [infected] of EVENT [infect].</li>
 
                 </ol>
-
-                <br><br>
-                <h3>Event Ontology:</h3>
-                <div id="event_instructions_table">
-                    <iframe style="width: 100%; height: 300px;"
-                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=483011926&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
-                </div>
-                <!-- <div style="display: flex; justify-content: center;">
-                    <table id="events_table" style="float:none;">
-                        <tr>
-                            <td width="2%"><b>Event</b></td>
-                            <td width="8%"><b>Definition</b></td>
-                        </tr>
-                        <tr>
-                            <td>infect</td>
-                            <td> The process of a disease/pathogen invading host(s). </td>
-                        </tr>
-                        <tr>
-                            <td>spread</td>
-                            <td> The process of a disease spreading/pervailing massively at a large scale. </td>
-                        </tr>
-                        <tr>
-                        <td>symptom</td>
-                        <td> Individuals displaying physiological features indicating the abnormality of organisms.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>prevent</td>
-                        <td> Individuals trying to prevent the infection of a disease. </td>
-                    </tr>
-                    <tr>
-                        <td>control</td>
-                        <td> Collective efforts trying to impede the spread of a pandemic. </td>
-                    </tr>
-                    <tr>
-                        <td>cure</td>
-                        <td> Stopping infection and relieving individuals from infections/symptoms. </td>
-                    </tr>
-                    <tr>
-                        <td>death</td>
-                        <td> End of life of individuals due to infectious disease. </td>
-                    </tr>
-                    <tr>
-                        <td>flag</td>
-                        <td> Special event used when annotated word is ambiguous or when there are multiple triggering
-                            words. </td>
-                        </tr>
-                    </table>
-                </div> -->
-
-
                 </p>
 
                 <br><br>
 
-                <h3>Summarized Argument Ontology:</h3>
+                <h3> Event-Argument Ontology:</h3>
                 <div id="arg_table_short">
                     <iframe style="width: 100%; height: 500px;"
                         src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=692645370&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
@@ -427,137 +292,12 @@
             </short-summary>
 
             <positive-example>
-                <table>
-                    <tr>
-                        <th>Example Text</th>
-                        <th>Event</th>
-                        <th>Argument</th>
-                        <th>Annotation</th>
-                        <th>Agreement</th>
-                        <th>Reason if disagree</th>
-                    </tr>
-                    <tr>
-                        <td rowspan="7">The principal claims that despite 10 more students and 3 more instructors
-                            testing positive today, masking on campus still needs not be mandatory.
-                        </td>
-                        <td rowspan="7">infect</td>
-                        <td>Trigger</td>
-                        <td>positive</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Infected</td>
-                        <td>students, instructors</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Disease</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Place</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Time</td>
-                        <td>today</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Value</td>
-                        <td>10,3</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Information-Source</td>
-                        <td>The principal</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>This year, more people are dying of unemployment and starvation instead of COVID.
-                        </td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td>People aren't dying of COVID, so the event death doesn't occur.</td>
-                    </tr>
-                </table>
+                <iframe style="height: 500px; width:100%;" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=1555479899&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
 
             </positive-example>
 
             <negative-example>
-                <table>
-                    <tr>
-                        <th>Example Text</th>
-                        <th>Event</th>
-                        <th>Argument</th>
-                        <th>Annotation</th>
-                        <th>Agreement</th>
-                        <th>Reason if disagree</th>
-                    </tr>
-                    <tr>
-                        <td rowspan="8">Wearing a mask cannot block any virus, but social distancing can protect you
-                            from COVID.
-                        </td>
-                        <td rowspan="8">prevent</td>
-                        <td>Trigger</td>
-                        <td>protect</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Agent</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Disease</td>
-                        <td>COVID</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Means</td>
-                        <td>Wearing a mask</td>
-                        <td><b>no</b></td>
-                        <td>Social distancing is the correct mean that can prevent infection.</td>
-                    </tr>
-                    <tr>
-                        <td>Target</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Information-Source</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Effectiveness</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Impact</td>
-                        <td>-</td>
-                        <td>yes</td>
-                        <td></td>
-                    </tr>
-                </table>
+                <iframe style="height: 500px; width:100%;" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=1208443491&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
             </negative-example>
 
         </crowd-instructions>
@@ -565,8 +305,7 @@
             <div id="annotate">
 
                 <div>
-                    <p style="padding-left:10px;color:red;width:350px;"><b>Please read the instructions before
-                            attempting the task</b></p>
+                    <p style="padding-left:10px;color:red;width:500px;"><b>Please read the instructions before attempting the task</b>. After each example hit the "Next" button at the top of the screen. Once you finish all five examples, please scroll down and click the "Submit HIT" button to complete the task.</p>
                 </div>
 
                 <!-- We store the annotations in the 5 pages in these divs -->
@@ -582,9 +321,12 @@
 
 
                 <div>
-                    <p style="padding-left:10px;color:#e31818;width:350px;">Check the box if you think the annotation is
+                    <p style="padding-left:10px;color:#e31818;width:500px;">Check the box if you think the annotation is
                         incorrect, and provide a short point-form answer in the text box below explaining why you think
-                        so.</p>
+                        so. <br><br>
+                        
+                        <u>Important Note</u>:
+                        Your answers (both checkings and writings) are <b>automatically saved</b>. If you navigated to previous pages and do not see your answers, they are already saved and you <b>DON'T</b> need to retype. If you do want to edit your answers, just retype in the box.</p>
 
                     <p style="padding-left:10px;color:#2c18e3;width:350px;">Trigger words and Events:</p>
 
@@ -597,653 +339,16 @@
 
                 </div>
                 <div id="feedback_div" style="width: 200px; padding: 10px; margin: 10px; border:1px solid black;">
-                    <p style="margin-bottom: 0px; margin-top: 0px;">Please leave us feedback! We'd love to hear it!</p>
-                    <crowd-text-area name="feedback"></crowd-text-area>
+                    <p style="margin-bottom: 0px; margin-top: 0px;">Please leave us any feedback about our task or if
+                        you would like more clarifications! We appreciate it!</p>
+                    <textarea name="feedback"></textarea>
                 </div>
             </div>
 
-
-            <table id="small_table" style="margin-right : 20px; margin-left : 150px;">
-                <tr>
-                    <td width="2%"><b>Event</b></td>
-                    <td width="12%"><b>Definition</b></td>
-                    <td width="10%"><b>Examples</b></td>
-                </tr>
-                <tr>
-                    <td>infect</td>
-                    <td> <span style="color:blue"> disease invading host(s). </span> <br>
-                        **emphasize infection" </td>
-                    <td>
-                        "I <b>have</b> COVID." <br>
-                        "High <b>infection</b> rate in U.S. ..."
-                    </td>
-                </tr>
-                <tr>
-                    <td>spread</td>
-                    <td> <span style="color:blue"> disease spreading at a large scale. </span> <br>
-                        **emphasize dispersion<br> </td>
-                    <td>
-                        "Control the <b>spread</b> of covid." <br>
-                        "Infected cases <b>increases</b> ..."
-                    </td>
-                </tr>
-                <tr>
-                    <td>symptom</td>
-                    <td> <span style="color:blue"> Individuals displaying abnormal physiological features. </span> </td>
-                    <td>"<b>Symptoms</b> of disease..." <br>
-                        "I <b>have</b> a sore throat."</td>
-                </tr>
-                <tr>
-                    <td>prevent</td>
-                    <td> <span style="color:blue"> attempting to avoid infection of a disease. </span> <br>
-                        **can be done by individual effort"
-                    </td>
-                    <td>"...<b>prevent</b> disease infection." <br>
-                        "...<b>protect</b> family from COVID." </td>
-                </tr>
-                <tr>
-                    <td>control</td>
-                    <td> <span style="color:blue"> attempting to control spread of a pandemic. </span> <br>
-                        **can NOT be done by individual effort"
-                    </td>
-                    <td> "...<b>protect</b> nation from COVID." <br>
-                        "...<b>control</b> the spread of flu." </td>
-                </tr>
-                <tr>
-                    <td>cure</td>
-                    <td> <span style="color:blue">relieving individuals from infections and symptoms. </span> </td>
-                    <td>"This drug can <b> treat </b> smallpox." <br>
-                        "I <b> recovered </b> from my illness."</td>
-                </tr>
-                <tr>
-                    <td>death</td>
-                    <td> <span style="color:blue"> End of life of individuals due to infectious disease. </span> </td>
-                    <td>"Stats about Covid <b>death</b> toll..." <br>
-                        "The virus <b>kills</b> 50 people..." </td>
-                </tr>
-                <tr>
-                    <td>flag</td>
-                    <td> <span style="color:blue"> Special event used when annotation is ambiguous for some reason.
-                        </span> </td>
-                    <td> </td>
-                </tr>
-            </table>
-
-            <div id="arg_table" style="margin-right:20px;margin-left:50px;display:none">
-                <iframe
-                    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRv0wQ6v5pQhLOexXdleJqZlfxHz26njSdGMb5sr2DoC6Bp1ofrYkm-Q9kdCeNt5Hm75xLyhavh5tkr/pubhtml?gid=848061852&amp;single=true&amp;widget=true&amp;headers=false"
-                    width="750px" height="400px"></iframe>
+            <div id="arg_table_2" style="width: 75vw; height: 75vh; padding: 0vw 10vw 0vw 10vw;">
+                <iframe style="width: 80%; height: 100%;"
+                    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRxOiv5OtJqAJH5JPDJqd6e5jZ8zg9eyxu3utuNhIm2f0Pto6iY0UFnkffWeQeRJOuAi1647_Ow7NSX/pubhtml?gid=692645370&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
             </div>
-
-            <!--<table id="arg_table" style="margin-right:20px;margin-left:150px;display:none">
-        <thead><tr><th title="Field #1">Event</th>
-    <th title="Field #2">Argument</th>
-    <th title="Field #3">Infect</th>
-    <th title="Field #4">Example</th>
-    <th title="Field #5">Notes</th>
-    </tr></thead>
-    <tbody>
-    <tr>
-    <td> </td>
-    <td>Infected</td>
-    <td>The individual(s) being infected</td>
-    <td>Three dozen <b>workers</b> at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Disease</td>
-    <td>The disease or virus that invaded the host</td>
-    <td>Three dozen workers at ( user ) have tested positive for <b>COVID</b> - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Place</td>
-    <td>The place that the individual(s) are infected</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Time</td>
-    <td>The time that the individual(s) are infected</td>
-    <td>Three dozen workers at ( user ) have tested positive for COVID - 19 as of <b>May 15</b> . #( National Nurses Week url ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Manner</td>
-    <td>The means by which the disease infect a host</td>
-    <td>COVID - 19 spreads mainly among people who are in close contact ( within 6 feet ) for a PROLONGED period . Spread happens when an infected person coughs , sneezes , or talks &amp; amp ; droplets from their mouth or nose are launched into the <b>air</b> &amp; amp ; land in the mouths or noses of people nearby .</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Value</td>
-    <td>The number of people being infected</td>
-    <td><b>Three dozen</b> workers at ( user ) have tested positive for COVID - 19 as of May 15 . #( National Nurses Week url ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Origin</td>
-    <td>The place from where the disease comes.</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to infection</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Spread</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-    <td>Participant slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td>In many cases, phrases like &quot;the pandemic is spreading&quot; does not appear with other info regarding place and time or even the name of the disease; do we consider to utilize the published time of the tweet?<br/><br/>Also there are cases with only one explicit trigger word but several arguments, do we only consider the segment with explicit trigger words? </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Population</td>
-    <td>The population among which the disease spreads</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The disease/virus/pandemic that is prevailing</td>
-    <td>Right now , Britain doesnt have the ability to evenmonitor the spread of the <b>virus</b> , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the disease is spreading</td>
-    <td>Right now , <b>Britain</b> doesnt have the ability to evenmonitor the spread of the virus , let alone keep it under ( url ) is the scientific basis for assuming thatchildren dont spreadcoronavirus ? How can social distancing really be made to work ?( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time during which the disease is spreading</td>
-    <td>According to Johns Hopkins University , 22k new cases of Covid - 19 were diagnosed on <b>Tuesday , 5 / 12</b> . On <b>Wednesday</b> that number was 20k . And <b>yesterday</b> it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Manner</td>
-    <td>The means by which a disease spread</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Value</td>
-    <td>The number of people being infected</td>
-    <td>According to Johns Hopkins University , <b>22k</b> new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was <b>20k</b> . And yesterday it was up to <b>28 , 000</b> . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Origin</td>
-    <td>The place from where the disease comes.</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to the transmission of the disease</td>
-    <td>According to <b>Johns Hopkins University</b> , 22k new cases of Covid - 19 were diagnosed on Tuesday , 5 / 12 . On Wednesday that number was 20k . And yesterday it was up to 28 , 000 . But keep telling us its no problem to keep opening up ( preferably without verifying your #( American Gun Fetish ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Trend</td>
-    <td>The possible change of a transmission of a disease</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Symoptom</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Person</td>
-    <td>The individual(s) displaying symptoms</td>
-    <td>( user ) ( user ) Well , no , since <b>I</b> had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Sympyom</td>
-    <td>The concrete symptom(s) that are displayed</td>
-    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * covid - 19 , since there is usually a , signature , symptom front and centre . For example , I had the <b>mildest cough</b> in the world - then a pick and mix of the others ( in particular the <b>loss of taste</b> and <b>tiredness</b> ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The disease(s) that are potentially causing the symptoms</td>
-    <td>( user ) ( user ) Well , no , since I had a mix of these symptoms - it was * obviously * <b>covid - 19</b> , since there is usually a , signature , symptom front and centre . For example , I had the mildest cough in the world - then a pick and mix of the others ( in particular the loss of taste and tiredness ).</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the symptom(s) are displayed</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time during which the symptom(s) are displayed</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Duration</td>
-    <td>The time interval that the symptom(s) last</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to symptoms of the disease</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Prevent</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-    <td>Participant slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Agent</td>
-    <td>The individual(s) attempting to avoid infections </td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . <b>You</b> are protecting yourself and others .</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The disease/virus/illness being defensed against</td>
-    <td>( user ) As of today , I know of two people I knew who died from the <b>Coronavirus</b> . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting yourself and others .</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Means</td>
-    <td>actions/means that may prevent infection</td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to <b>wear a mask</b> . You are protecting yourself and others .</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the prevention takes place</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time at which the prevention takes place</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to the prevention of this disease</td>
-    <td><b>Online health gurus</b> say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is lacking . ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Target</td>
-    <td>The individual(s)/population to which the agent attempts to prevent the disease transmission</td>
-    <td>( user ) As of today , I know of two people I knew who died from the Coronavirus . Why take chances ? It &#39; s not that hard to wear a mask . You are protecting <b>yourself and others</b> .</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Effectiveness</td>
-    <td>How effective is the means against the disease</td>
-    <td>Online health gurus say high doses of vitamins and natural remedies can stave off COVID - 19 but evidence to support these claims is <b>lacking</b> . ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Impact</td>
-    <td>The physical/emotional impact caused by prevention measures</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Control</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-    <td>Participant slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Authority</td>
-    <td>The authoritity implementing/advocating the control of a panedmic</td>
-    <td>Maybe the <b>gov &#39; t</b> lockdown was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The intruding disease being defensed against</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Means</td>
-    <td>the enacted/adcovated policies/actions that may control the pandemic</td>
-    <td>Maybe the gov &#39; t <b>lockdown</b> was first implemented in a good faith effort to protect health . But after the bait and switch ( flatten the curve became wait for a vaccine ), its hard to argue that this is about anything more than control .&quot;</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the control takes place</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . <b>Taiwan , Hong Kong , New Zealand , Austria</b> have already shown you its effectiveness . ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time at which the control takes place</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Origin</td>
-    <td>The place from where the disease comes.</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to the control of this disease</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Target</td>
-    <td>The individual(s)/population among which the agent attempts to impede the disease transmission</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of <b>people</b> . Taiwan , Hong Kong , New Zealand , Austria have already shown you its effectiveness . ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Effectiveness</td>
-    <td>How effective is the means against the disease</td>
-    <td>( user ) Make wearing masks mandatory , please . It can save a lot of people . Taiwan , Hong Kong , New Zealand , Austria have already shown you its <b>effectiveness</b> . ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Impact</td>
-    <td>The physical/emotional/social impact caused by control policies</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Cure</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-    <td>Participant slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td>We don&#39;t count cures that is completely not effective as triggering event Cure </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Cured</td>
-    <td>The individuals(s) recovered/recieving the treatments</td>
-    <td>( user ) from ( user ) says that while most <b>patients</b> recover from COVID - 19 in <b>about a week</b> , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The disease/illness that the patients get rid of</td>
-    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against <b>COVID - 19</b> reported in PubMed ! ( user ) ( user ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Means</td>
-    <td>The therapy that (potentialy) treat the disease</td>
-    <td>Repurposing <b>drugs</b> to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in PubMed ! ( user ) ( user ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the recovery takes place</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time at which the recovery takes place</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Value</td>
-    <td>The number of people being cured</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Facility</td>
-    <td>The individual(s)/organization(s) utilizing/inventing certain means to facilitate recoveries</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to the cure/recovery of this disease</td>
-    <td>Repurposing drugs to treat #( COVID ) - our site now links to a live database listing all treatments against COVID - 19 reported in <b>PubMed</b> ! ( user ) ( user ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Effectiveness</td>
-    <td>How effective is the means against the disease</td>
-    <td>This Recently developed Anti - body could very well be the answer to Ending this CoronaVirus . Shown to be <b>100 % effective</b> so far ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Duration</td>
-    <td>The time interval that the treatment takes</td>
-    <td>( user ) from ( user ) says that while most patients recover from COVID - 19 in <b>about a week</b> , a significant minority of patients enter a very nasty second wave of illness . Read more : ( url ) #( u alberta ) ( user ) #( COVID ) #( infectious diseases ) ( url )</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Event</td>
-    <td>Argument</td>
-    <td>Death</td>
-    <td> </td>
-    <td>Notes</td>
-    </tr>
-    <tr>
-    <td>Participant slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td>The trend may be manifested via change of numbers instead of a trigger</td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Dead</td>
-    <td>The individuals(s) who die of infectious disease</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Disease</td>
-    <td>The disease that (potentially) causes the death</td>
-    <td>( url ) on pace to pass 100 , 000 <b>Covid - 19</b> deaths by June 1 , CDC director says - POLITICO ( url</td>
-    <td> </td>
-    </tr>
-    <tr>
-    <td>Attribute slots</td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Place</td>
-    <td>The place at which the death takes place</td>
-    <td>-</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Time</td>
-    <td>The time at which the death takes place</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by <b>June 1</b> , CDC director says - POLITICO ( url</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Value</td>
-    <td>The number of death</td>
-    <td>( url ) on pace to pass <b>100 , 000</b> Covid - 19 deaths by June 1 , CDC director says - POLITICO ( url</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Information-source</td>
-    <td>The source that is providing this information regarding to fatality of this disease</td>
-    <td>( url ) on pace to pass 100 , 000 Covid - 19 deaths by June 1 , <b>CDC director</b>  says - POLITICO ( url</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Trend</td>
-    <td>The trend of death counts caused by disease infection</td>
-    <td>( user ) ( user ) Well we know for sure exactly how many have died from covid . We have no clue how many have survived it . So doing some quick math here ... the death rate can only <b>go down</b> . Its a mathematical certainty . Soooo definitely deceptive numbers to increase fear .</td>
-    <td> </td>
-    </tr>
-    <tr>
-        <td> </td>
-    <td>Impact</td>
-    <td>The physical/emotional impact caused by disease fatalities</td>
-    <td> </td>
-    <td> </td>
-    </tr>
-    </tbody>
-  </table>-->
 
             <table id="big_table" style="margin-right:20px;margin-left:150px;display:none">
                 <tr>
